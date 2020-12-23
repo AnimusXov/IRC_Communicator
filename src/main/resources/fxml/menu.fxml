@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXScrollPane?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="495.0" prefWidth="391.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.MenuController">
+   <children>
+      <Label contentDisplay="BOTTOM" layoutX="1.0" layoutY="2.0" prefHeight="18.0" prefWidth="290.0" text="Informacje Użytkownika">
+         <font>
+            <Font name="Roboto Black" size="13.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <Group layoutX="1.0" layoutY="121.0">
+         <children>
+            <VBox layoutX="231.0" layoutY="31.0" spacing="5.0">
+               <children>
+                  <JFXButton buttonType="RAISED" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Dodaj " textFill="WHITE">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Usuń" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Edytuj" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Sortuj" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton buttonType="RAISED" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Ulubione" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </VBox>
+            <JFXScrollPane layoutX="17.0" layoutY="31.0" prefHeight="247.0" prefWidth="186.0">
+               <children>
+                  <JFXListView fx:id="serverList" />
+               </children>
+            </JFXScrollPane>
+            <Label contentDisplay="BOTTOM" prefHeight="25.0" prefWidth="301.0" text="Sieci">
+               <font>
+                  <Font name="Roboto Black" size="13.0" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </Group>
+      <Separator layoutX="16.0" layoutY="425.0" prefHeight="17.0" prefWidth="365.0" />
+      <HBox alignment="BASELINE_CENTER" layoutX="13.0" layoutY="442.0" prefHeight="25.0" prefWidth="365.0" spacing="100.0">
+         <children>
+            <JFXButton buttonType="RAISED" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Wyjście" textFill="WHITE">
+               <font>
+                  <Font name="Roboto" size="12.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="connect" buttonType="RAISED" layoutX="10.0" layoutY="10.0" onAction="#handleConnectButtonAction" prefHeight="22.0" prefWidth="119.0" ripplerFill="#323232" style="-fx-background-color: #29b6f6;" text="Połącz" textFill="WHITE">
+               <font>
+                  <Font name="Roboto" size="12.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </HBox>
+      <JFXTextField fx:id="nickname" layoutX="16.0" layoutY="27.0" prefHeight="23.0" prefWidth="135.0" promptText="Nickname">
+         <font>
+            <Font name="Roboto" size="12.0" />
+         </font>
+      </JFXTextField>
+      <JFXTextField layoutX="16.0" layoutY="50.0" prefHeight="23.0" prefWidth="135.0" promptText="Alternatywny nickname">
+         <font>
+            <Font name="Roboto" size="12.0" />
+         </font>
+      </JFXTextField>
+      <JFXTextField layoutX="16.0" layoutY="73.0" prefHeight="23.0" prefWidth="135.0" promptText="Nazwa Użytkownika">
+         <font>
+            <Font name="Roboto" size="12.0" />
+         </font>
+      </JFXTextField>
+      <Separator layoutX="13.0" layoutY="104.0" prefHeight="17.0" prefWidth="365.0" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</AnchorPane>
