@@ -19,6 +19,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         scene = new Scene(loadFXML("/fxml/menu"), 380,475 );
         stage.setScene(scene);
         stage.show();

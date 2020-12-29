@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -9,49 +10,81 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPaneMW" prefHeight="526.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.MainWindowController">
-   <children>
-      <BorderPane prefHeight="526.0" prefWidth="781.0">
-         <bottom>
-            <HBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="labelLeftBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="200.0" />
-                  <JFXTextField fx:id="typeField" alignment="BOTTOM_LEFT" prefHeight="25.0" prefWidth="381.0" style="-fx-border-style: solid;" />
-                  <Label fx:id="labelRightBottom" alignment="BASELINE_CENTER" contentDisplay="BOTTOM" layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="200.0" />
-               </children>
-            </HBox>
-         </bottom>
-         <left>
-            <JFXListView fx:id="channelsList" onMouseClicked="#onMouseClicked" BorderPane.alignment="CENTER" />
-         </left>
-         <center>
-            <JFXListView fx:id="chat_window" BorderPane.alignment="CENTER" />
-         </center>
-         <right>
-            <JFXListView fx:id="userList" BorderPane.alignment="CENTER" />
-         </right>
-         <top>
-            <MenuBar BorderPane.alignment="CENTER">
+<BorderPane id="borderPaneMainWindow" maxHeight="1080.0" maxWidth="1920.0" minHeight="600.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPaneMainWindow" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.MainWindowController">
+   <bottom>
+      <HBox alignment="TOP_CENTER" maxHeight="30.0" maxWidth="1920.0" prefHeight="20.0" prefWidth="800.0" style="-fx-border-style: hidden; -fx-border-color: #29b6f6; -fx-border-width: 3; -fx-border-insets: 5;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="labelLeftBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="200.0" prefHeight="30.0" prefWidth="200.0" />
+            <JFXTextField fx:id="typeField" alignment="TOP_LEFT" cache="true" cacheHint="SPEED" labelFloat="true" maxWidth="1800.0" onAction="#onEnterKeyPress" prefColumnCount="20" prefHeight="15.0" prefWidth="800.0" styleClass="jfxTextField">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </JFXTextField>
+            <Label fx:id="labelRightBottom" alignment="BASELINE_CENTER" contentDisplay="BOTTOM" layoutX="10.0" layoutY="10.0" maxHeight="30.0" maxWidth="200.0" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <left>
+      <VBox maxHeight="1000.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="40.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="serverNameLabel" alignment="CENTER" maxHeight="15.0" minHeight="15.0" prefHeight="15.0" prefWidth="200.0" styleClass="topLeftLabel" />
+            <JFXListView fx:id="channelsList" prefHeight="1000.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="736.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="motdLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="800.0" textAlignment="CENTER">
+               <font>
+                  <Font name="Roboto Black" size="12.0" />
+               </font>
+            </Label>
+            <JFXListView fx:id="chat_window" depth="1" maxHeight="1000.0" minHeight="600.0" minWidth="600.0" prefHeight="1000.0" prefWidth="800.0" verticalGap="5.0" />
+         </children>
+      </VBox>
+   </center>
+   <right>
+      <VBox maxHeight="1000.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="usersTableLabel" alignment="CENTER" prefHeight="15.0" prefWidth="200.0">
+               <font>
+                  <Font name="Roboto Black" size="12.0" />
+               </font>
+            </Label>
+            <JFXListView fx:id="userList" maxHeight="1000.0" minHeight="600.0" minWidth="200.0" prefHeight="1000.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </right>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
               <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="HELP">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="HELP">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="HELP">
                   <items>
                     <MenuItem mnemonicParsing="false" text="About" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
-         </top>
-      </BorderPane>
-   </children>
-</AnchorPane>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>

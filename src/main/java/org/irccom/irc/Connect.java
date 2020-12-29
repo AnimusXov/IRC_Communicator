@@ -48,6 +48,7 @@ public class Connect {
         client.addChannel("#test998");
 
 
+
        System.out.println(client.getClient().getChannels().isEmpty());
         System.out.println(client.getChannels().isEmpty());
 

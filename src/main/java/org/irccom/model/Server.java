@@ -6,6 +6,14 @@ public class Server {
     private String ip;
     private String port;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
