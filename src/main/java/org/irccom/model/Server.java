@@ -38,6 +38,11 @@ public class Server {
         this.port = port;
     }
 
+    public Server(String name, String ip, String port) {
+        this.name = name;
+        this.ip = ip;
+        this.port = port;
+    }
 
     public Server(int id, String name, String ip, String port) {
         this.id = id;

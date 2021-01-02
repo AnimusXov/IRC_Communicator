@@ -2,7 +2,6 @@ package org.irccom.controller;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.xml.internal.ws.resources.ServerMessages;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,14 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import net.engio.mbassy.listener.Handler;
 import org.irccom.controller.custom.NoSelectionModel;
@@ -27,7 +23,6 @@ import org.irccom.irc.models.CurrentChannel;
 import org.irccom.irc.models.Message;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.element.Channel;
-import org.kitteh.irc.client.library.element.ServerMessage;
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.client.library.event.channel.ChannelNamesUpdatedEvent;
 import org.kitteh.irc.client.library.event.channel.RequestedChannelJoinCompleteEvent;
@@ -35,7 +30,6 @@ import org.kitteh.irc.client.library.event.client.ClientNegotiationCompleteEvent
 import org.kitteh.irc.client.library.event.helper.ServerMessageEvent;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDateTime;
@@ -54,6 +48,9 @@ public class MainWindowController   {
     Client client = Connect.client.getClient();
     Hashtable<Channel, CurrentChannel> setOfMessageObsList = new Hashtable<>();
     Channel pointerCurrentChannel;
+
+
+
     @FXML
     ObservableList<Message> serverMessages = FXCollections.observableArrayList();
     @FXML

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="314.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.NewServerController">
+<StackPane fx:id="stackPane" prefHeight="314.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.NewServerController">
    <children>
       <JFXTabPane>
          <tabs>
@@ -25,7 +25,7 @@
                         <JFXTextField fx:id="newServerName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" promptText="Nazwa" />
                         <JFXTextField fx:id="newServerIpAddress" promptText="Adres IP" />
                         <JFXTextField fx:id="newServerPort" promptText="Port" />
-                        <JFXButton buttonType="RAISED" prefHeight="25.0" prefWidth="135.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE">
+                        <JFXButton buttonType="RAISED" onAction="#handleNewServerSaveButtonAction" prefHeight="25.0" prefWidth="135.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE">
                            <VBox.margin>
                               <Insets top="15.0" />
                            </VBox.margin>
@@ -53,6 +53,11 @@
                         <JFXTextField fx:id="newServerRealName" promptText="Prawdziwe Imie" />
                         <JFXTextField fx:id="newServerUsername" promptText="Adres IP" text="Nazwa Użytkownika" />
                         <JFXPasswordField fx:id="newServerPassword" promptText="Hasło" />
+                        <JFXButton fx:id="newUserAddButton" buttonType="RAISED" onAction="#handleNewUserSaveButtonAction" prefHeight="25.0" prefWidth="135.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="12.0" />
+                           </font>
+                        </JFXButton>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

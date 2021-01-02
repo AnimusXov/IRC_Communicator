@@ -1,7 +1,5 @@
 package org.irccom.sqlite;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.irccom.model.Server;
 
 import java.sql.*;
@@ -13,12 +11,16 @@ import java.util.logging.Level;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
-public class GenericDaoImpl implements GenericDao<Server, Integer> {
-
+public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
+    public Optional<Integer> lastGeneratedId;
     private final Optional<Connection> connection;
 
-    public GenericDaoImpl() {
+    public ServerGenericDaoImpl() {
         this.connection = JdbcConnection.getConnection();
+    }
+
+    public Optional<Integer> getId() {
+        return lastGeneratedId;
     }
 
     @Override
@@ -111,7 +113,7 @@ public class GenericDaoImpl implements GenericDao<Server, Integer> {
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             }
-
+            lastGeneratedId = generatedId;
             return generatedId;
         });
     }
