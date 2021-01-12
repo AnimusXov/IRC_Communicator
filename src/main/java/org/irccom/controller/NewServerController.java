@@ -1,20 +1,17 @@
 package org.irccom.controller;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.StackPane;
-import javafx.stage.WindowEvent;
-import org.irccom.guava.event.BooleanEvent;
-import org.irccom.guava.listener.BooleanEventListener;
+import org.irccom.controller.custom.ChannelCellFactory;
 import org.irccom.helper.GlobalInstances;
 import org.irccom.model.Server;
 import org.irccom.model.User;
@@ -22,7 +19,6 @@ import org.irccom.sqlite.GenericDao;
 import org.irccom.sqlite.ServerGenericDaoImpl;
 import org.irccom.sqlite.UserGenericDaoImpl;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -30,7 +26,7 @@ import java.util.Optional;
 public class NewServerController   {
 
 
-
+    public JFXButton addNewChannelButton;
     EventBus eb = new EventBus();
 
     public JFXTextField newServerName;
@@ -56,32 +52,72 @@ public class NewServerController   {
 
     @FXML
     private void handleNewServerSaveButtonAction(ActionEvent event) {
-       saveNewSever();
+       saveNewSever(helper.getPopulate());
     }
     @FXML
     private void handleNewUserSaveButtonAction(ActionEvent event) {
-        saveNewUser();
+        saveNewUser(helper.getPopulate());
+    }
+    @FXML
+    private void handleNewChannelListButtonAction(ActionEvent event) {
+        saveNewChannelList(helper.getPopulate());
     }
 
-    private void saveNewSever(){
+    private void saveNewChannelList(boolean isUpdate){
+    }
+    private void saveNewSever(boolean isUpdate){
         Server server = new Server(
                 newServerName.getText(),
                 newServerIpAddress.getText(),
                 newServerPort.getText()
         );
+        if(isUpdate) {
+            SERVER_DAO.update(server);
+        }
+        else
         SERVER_DAO.save(server);
+
     }
-    private void saveNewUser(){
-        User user = new User(
-                SERVER_DAO.getId().get(),
-                newServerNickname.getText(),
-                newServerAlternativeNickname.getText(),
-                newServerRealName.getText(),
-                newServerUsername.getText(),
-                newServerPassword.getText()
-        );
+    private void saveNewUser(boolean isUpdate){
+        User user = new User();
+
+
+        user.setNickname(newServerNickname.getText());
+        user.setAlt_nickname(newServerAlternativeNickname.getText());
+        user.setRealname(newServerRealName.getText());
+        user.setUsername(newServerUsername.getText());
+        user.setPassword(newServerPassword.getText());
+
+        if(!channelsSet.isEmpty()) {
+            String channelString = String.join(",", autoJoinChannelsListView.getItems());
+            user.setChannels(channelString);
+            channelsSet.clear();
+            channelsSet.addAll(autoJoinChannelsListView.getItems());
+        }
+        if(isUpdate) {
+            user.setId(helper.getSelectedServerServer().getId());
+            if(USER_DAO.get(helper.getSelectedServerServer().getId()).isPresent()) {
+                USER_DAO.update(user);
+            }
+            else
+            USER_DAO.save(user);
+        }
+        if(!isUpdate)
         USER_DAO.save(user);
     }
+
+    @FXML
+    private void handleNewChannelButton(ActionEvent event)  {
+        channelsSet.clear();
+        channelsSet.addAll(autoJoinChannelsListView.getItems());
+        channelsSet.add("#Nowy" + channelsSet.size());
+        autoJoinChannelsListView.setItems(FXCollections.observableArrayList(channelsSet));
+        autoJoinChannelsListView.refresh();
+    }
+
+
+
+
 
     private void populateFields(){
         newServerName.setText(helper.getSelectedServerServer().getName());
@@ -94,8 +130,14 @@ public class NewServerController   {
              newServerRealName.setText(value.getRealname());
              newServerUsername.setText(value.getUsername());
              newServerPassword.setText(value.getPassword());
-             channelsSet.addAll(stringToArray(value.getChannels()));
+             if(value.getChannels()!=null) {
+                 channelsSet.addAll(stringToArray(value.getChannels()));
+                 autoJoinChannelsListView.setItems(FXCollections.observableArrayList(channelsSet));
+                 autoJoinChannelsListView.refresh();
+             }
+
         });
+
     }
 
     private ArrayList<String> stringToArray (String string){
@@ -105,14 +147,18 @@ public class NewServerController   {
 
 
     @FXML
-    public void initialize() throws SQLException {
-    afterInitialize();
+    public void initialize() {
+    autoJoinChannelsListView.setEditable(true);
+    autoJoinChannelsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    autoJoinChannelsListView.setCellFactory(new ChannelCellFactory());
+    autoJoinChannelsListView.setItems(FXCollections.observableArrayList(channelsSet));
 
+    afterInitialize();
     }
 
-    @Subscribe
     public void afterInitialize() {
-            if(helper.getPopulate())
+            if(helper.getPopulate()) {
                 populateFields();
+            }
     }
 }

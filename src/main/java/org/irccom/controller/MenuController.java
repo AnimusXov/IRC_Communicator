@@ -19,8 +19,10 @@ import org.irccom.guava.listener.BooleanEventListener;
 import org.irccom.helper.GlobalInstances;
 import org.irccom.irc.Connect;
 import org.irccom.model.Server;
+import org.irccom.model.User;
 import org.irccom.sqlite.GenericDao;
 import org.irccom.sqlite.ServerGenericDaoImpl;
+import org.irccom.sqlite.UserGenericDaoImpl;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,19 +31,22 @@ import java.sql.SQLException;
 public class MenuController {
 
     public JFXButton editServer;
+    public JFXTextField username;
+    public JFXTextField alt_nickname;
     Connect conn = new Connect();
     EventBus eb = new EventBus();
     public JFXButton addNewServerButton;
     public JFXButton connect;
     public JFXTextField nickname;
 
-    GlobalInstances varHelper = new GlobalInstances();
+    GlobalInstances helper = new GlobalInstances();
 
 
 
 
 
     private final GenericDao<Server,Integer> SERVER_DAO = new ServerGenericDaoImpl();
+    private final GenericDao<User,Integer> USER_DAO = new UserGenericDaoImpl();
 
     @FXML
     ObservableList<Server> obsServerList = FXCollections.observableArrayList(SERVER_DAO.getAll());
@@ -68,21 +73,39 @@ public class MenuController {
 
     }
 
+    // Check if server has an user binded to it
+    private boolean isUserInfo(){
+        return USER_DAO.get(serverList.getSelectionModel().getSelectedItem().getId()).isPresent();
+    }
+
+    private void setEmpty(JFXTextField txtField){
+        if(txtField.getText().isEmpty());
+    }
+
     // Action after connect button has been pressed
     @FXML
     private void handleConnectButtonAction(ActionEvent event) throws IOException {
-        conn.connect(nickname.getText(),serverList.getSelectionModel().getSelectedItem().getIp());
+        Server server = serverList.getSelectionModel().getSelectedItem();
+
+        User user = new User(nickname.getText(),alt_nickname.getText(),username.getText());
+
+        if(isUserInfo()) {
+            user = USER_DAO.get(serverList.getSelectionModel().getSelectedItem().getId()).get();
+            conn.connect(server,user);
+        }
+        conn.defaultConnect(server,user);
         openNewWindow("main_window.fxml",true, "FX_IRC");
     }
 
     @FXML
     private void handleNewServerButtonAction(ActionEvent event) throws IOException {
+        helper.setPopulate(false);
         openNewWindow("new_server.fxml",false,"Dodawanie Nowego Servwera");
     }
     @FXML
     private void handleEditServerButtonAction(ActionEvent event) throws IOException {
-        varHelper.setPopulate(true);
-        varHelper.setServer(serverList.getSelectionModel().getSelectedItem());
+        helper.setPopulate(true);
+        helper.setServer(serverList.getSelectionModel().getSelectedItem());
         openNewWindow("new_server.fxml",false, "Edycja Informacji Użytkownika");
     }
 

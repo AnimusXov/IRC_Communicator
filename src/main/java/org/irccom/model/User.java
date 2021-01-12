@@ -20,6 +20,16 @@ public class User {
         this.channels = channels;
     }
 
+    public User() {
+    }
+
+    public User(String nickname, String alt_nickname, String realname, String username) {
+        this.nickname = nickname;
+        this.alt_nickname = alt_nickname;
+        this.realname = realname;
+        this.username = username;
+    }
+
     public User(int id, String nickname, String alt_nickname, String realname, String username, String password) {
         this.id = id;
         this.nickname = nickname;
@@ -27,6 +37,12 @@ public class User {
         this.realname = realname;
         this.username = username;
         this.password = password;
+    }
+
+    public User(String nickname, String alt_nickname, String username) {
+        this.nickname = nickname;
+        this.alt_nickname = alt_nickname;
+        this.username = username;
     }
 
     public User(String nickname, String alt_nickname, String realname, String username, String password) {

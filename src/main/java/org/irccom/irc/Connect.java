@@ -1,16 +1,14 @@
 package org.irccom.irc;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.fxml.FXML;
-import net.engio.mbassy.listener.Handler;
-import org.irccom.controller.MainWindowController;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.irccom.model.Server;
+import org.irccom.model.User;
 import org.kitteh.irc.client.library.Client;
-import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 
+import javax.jws.soap.SOAPBinding;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 public class Connect {
 
@@ -24,42 +22,50 @@ public class Connect {
 
 
     public static Client client;
+   // public static @NonNull Optional<org.kitteh.irc.client.library.element.User> user_;
 
 
     Client.Builder builder = Client.builder();
 
 
 
-    public void connect(String nick, String ip) {
-
-
+    public void connect(Server server, User user) {
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         builder.listeners().input(line -> System.out.println(sdf.format(new Date()) + ' ' + "[I] " + line));
         builder.listeners().output(line -> System.out.println(sdf.format(new Date()) + ' ' + "[O] " + line));
         builder.listeners().exception(Throwable::printStackTrace);
 
         client = Client.builder()
-                .nick(nick)
+                .nick(user.getNickname())
+                .name(user.getUsername())
+                .realName(user.getRealname())
                 .server()
-                .host(ip)
+                .host(server.getIp())
+                .password(user.getPassword())
                 .then()
                 .buildAndConnect();
-        client.addChannel("#test999");
-        client.addChannel("#test998");
-
-
-
-       System.out.println(client.getClient().getChannels().isEmpty());
+       // user_ = client.getUser();
+        System.out.println(client.getChannels().isEmpty());
+        for (String channel : user.getChannels().split(",")) {
+            client.addChannel(channel);
+        }
+    }
+    public void defaultConnect(Server server, User user){
+        client = Client.builder()
+                .nick(user.getNickname())
+                .name(user.getUsername())
+                .server()
+                .host(server.getIp())
+                .then()
+                .buildAndConnect();
+        for (String channel : user.getChannels().split(",")) {
+            client.addChannel(channel);
+        }
+        //user_ = client.getUser();
         System.out.println(client.getChannels().isEmpty());
 
-
     }
-  /*  @Handler
-    public void onChannelMessage(@org.jetbrains.annotations.NotNull ChannelMessageEvent event ) {
-        if (event.getActor().getNick().equals(event.getActor().getClient().getNick()))
-            return;
-        System.out.println(event.getMessage());
-    }*/
+
 
 
 }

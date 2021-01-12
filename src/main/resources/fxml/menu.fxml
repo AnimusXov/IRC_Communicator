@@ -56,12 +56,12 @@
                   <Font name="Roboto" size="12.0" />
                </font>
             </JFXTextField>
-            <JFXTextField maxWidth="186.0" prefHeight="23.0" prefWidth="186.0" promptText="Alternatywny nickname">
+            <JFXTextField fx:id="alt_nickname" maxWidth="186.0" prefHeight="23.0" prefWidth="186.0" promptText="Alternatywny nickname">
                <font>
                   <Font name="Roboto" size="12.0" />
                </font>
             </JFXTextField>
-            <JFXTextField maxWidth="186.0" prefHeight="23.0" prefWidth="186.0" promptText="Nazwa Użytkownika">
+            <JFXTextField fx:id="username" maxWidth="186.0" prefHeight="23.0" prefWidth="186.0" promptText="Nazwa Użytkownika">
                <font>
                   <Font name="Roboto" size="12.0" />
                </font>
