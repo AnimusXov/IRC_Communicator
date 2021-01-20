@@ -5,3 +5,6 @@
 .list-cell:even{
     -fx-background-color: white;
 }
+.jfx-list-view{
+    -fx-padding: 0px;
+}

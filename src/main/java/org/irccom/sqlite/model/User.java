@@ -1,4 +1,4 @@
-package org.irccom.model;
+package org.irccom.sqlite.model;
 
 public class User {
     int id;

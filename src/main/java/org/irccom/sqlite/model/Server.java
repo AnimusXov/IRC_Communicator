@@ -1,4 +1,4 @@
-package org.irccom.model;
+package org.irccom.sqlite.model;
 
 public class Server {
     private int id;
@@ -33,6 +33,7 @@ public class Server {
     public String getPort() {
         return port;
     }
+
 
     public void setPort(String port) {
         this.port = port;

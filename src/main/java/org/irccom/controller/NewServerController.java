@@ -13,8 +13,8 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.StackPane;
 import org.irccom.controller.custom.ChannelCellFactory;
 import org.irccom.helper.GlobalInstances;
-import org.irccom.model.Server;
-import org.irccom.model.User;
+import org.irccom.sqlite.model.Server;
+import org.irccom.sqlite.model.User;
 import org.irccom.sqlite.GenericDao;
 import org.irccom.sqlite.ServerGenericDaoImpl;
 import org.irccom.sqlite.UserGenericDaoImpl;
@@ -76,6 +76,7 @@ public class NewServerController   {
         }
         else
         SERVER_DAO.save(server);
+
 
     }
     private void saveNewUser(boolean isUpdate){

@@ -1,6 +1,6 @@
 package org.irccom.helper;
 
-import org.irccom.model.Server;
+import org.irccom.sqlite.model.Server;
 
 public class GlobalInstances {
     private static Server selectedServer;

@@ -1,18 +1,20 @@
 package org.irccom.sqlite;
 
-import org.irccom.model.User;
+import org.irccom.sqlite.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.message.Message;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 public class UserGenericDaoImpl implements GenericDao<User, Integer> {
-
+    private static final Logger logger = LogManager.getLogger(UserGenericDaoImpl.class);
     private final Optional<Connection> connection;
 
     public UserGenericDaoImpl() {
@@ -43,10 +45,10 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
                     user = Optional.of(new User(id, nickname, alt_nickname, real_name, username , password, channel));
 
-                    LOGGER.log(Level.INFO, "Znaleziono {0} w bazie danych", user.get());
+                    logger.log(Level.INFO,"Znaleziono {0} w bazie danych " + user.get());
                 }
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
 
             return user;
@@ -75,11 +77,11 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
                     users.add(user);
 
-                    LOGGER.log(Level.INFO, "Znaleziono {0} w bazie danych", user);
+                    logger.log(Level.INFO, "Znaleziono {0} w bazie danych", user);
                 }
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
 
@@ -111,10 +113,10 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
 
 
-                LOGGER.log(Level.INFO, "{0} został stworzony pomyślnie {1}",
+                logger.log(Level.INFO, "{0} został stworzony pomyślnie {1}",
                         new Object[]{nonNullCustomer, numberOfInsertedRows > 0});
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
             return generatedId;
         });
@@ -149,11 +151,11 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
                 int numberOfUpdatedRows = statement.executeUpdate();
 
-                LOGGER.log(Level.INFO, "server został zaktualizowany pomyślnie {0}",
+                logger.log(Level.INFO, "server został zaktualizowany pomyślnie {0}",
                         numberOfUpdatedRows > 0);
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
     }
@@ -171,11 +173,11 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
                 int numberOfDeletedRows = statement.executeUpdate();
 
-                LOGGER.log(Level.INFO, "Server został usunięty pomyślnie {0}",
+                logger.log(Level.INFO, "Server został usunięty pomyślnie {0}",
                         numberOfDeletedRows > 0);
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
     }

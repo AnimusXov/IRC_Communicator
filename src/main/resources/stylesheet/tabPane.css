@@ -1,0 +1,13 @@
+.jfx-tab-pane .tab-header-area .jfx-rippler{
+    -jfx-rippler-fill :#5eb8ff;
+}
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #1b75bc;
+}
+.jfx-tab-pane .tab-selected-line {
+    -fx-stroke: #75bc1b;
+    -fx-stroke-width: 3pt;
+}
+.jfx-tab-pane {
+    -fx-font: 18px "Roboto";
+}

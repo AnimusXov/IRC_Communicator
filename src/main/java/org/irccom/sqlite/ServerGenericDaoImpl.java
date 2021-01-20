@@ -1,17 +1,21 @@
 package org.irccom.sqlite;
 
-import org.irccom.model.Server;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.message.Message;
+import org.irccom.sqlite.model.Server;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.logging.Level;
+import java.util.*;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+
 
 public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
+    private static final Logger logger = LogManager.getLogger(ServerGenericDaoImpl.class);
     public Optional<Integer> lastGeneratedId;
     private final Optional<Connection> connection;
 
@@ -39,10 +43,10 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
 
                     server = Optional.of(new Server(id, name, ip, port));
 
-                    LOGGER.log(Level.INFO, "Znaleziono {0} w bazie danych", server.get());
+                    logger.info("Znaleziono {0} w bazie danych" + server.get());
                 }
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.FATAL, (Message) null, ex);
             }
 
             return server;
@@ -68,11 +72,11 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
 
                     customers.add(server);
 
-                    LOGGER.log(Level.INFO, "Znaleziono {0} w bazie danych", server);
+                    logger.log(Level.INFO, "Znaleziono {0} w bazie danych", server);
                 }
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
 
@@ -108,10 +112,10 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
                     }
                 }
 
-                LOGGER.log(Level.INFO, "{0} został stworzony pomyślnie {1}",
-                        new Object[]{nonNullCustomer, numberOfInsertedRows > 0});
+                logger.log(Level.INFO, "{0} został stworzony pomyślnie {1}" +
+                        Arrays.toString(new Object[]{nonNullCustomer}));
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
             lastGeneratedId = generatedId;
             return generatedId;
@@ -140,11 +144,10 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
 
                 int numberOfUpdatedRows = statement.executeUpdate();
 
-                LOGGER.log(Level.INFO, "server został zaktualizowany pomyślnie {0}",
-                        numberOfUpdatedRows > 0);
+                logger.log(Level.INFO, "server został zaktualizowany pomyślnie {0}");
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
     }
@@ -162,13 +165,14 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
 
                 int numberOfDeletedRows = statement.executeUpdate();
 
-                LOGGER.log(Level.INFO, "Server został usunięty pomyślnie {0}",
-                        numberOfDeletedRows > 0);
+                logger.log(Level.INFO, "Server został usunięty pomyślnie {0}"
+                        );
 
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, (Message) null, ex);
             }
         });
     }
+
 
 }

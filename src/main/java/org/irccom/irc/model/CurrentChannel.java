@@ -1,9 +1,7 @@
-package org.irccom.irc.models;
+package org.irccom.irc.model;
 
 import javafx.collections.ObservableList;
 import org.kitteh.irc.client.library.element.Channel;
-
-import java.util.HashSet;
 
 public class CurrentChannel {
     private ObservableList<Message> msgObsList;

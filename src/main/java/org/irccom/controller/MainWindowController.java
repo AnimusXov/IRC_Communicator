@@ -1,9 +1,7 @@
 package org.irccom.controller;
 
-import com.jfoenix.controls.JFXListCell;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,31 +10,36 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import net.engio.mbassy.listener.Handler;
+import org.irccom.controller.preset.DefaultSettings;
 import org.irccom.irc.Connect;
-import org.irccom.irc.models.CurrentChannel;
-import org.irccom.irc.models.Message;
+import org.irccom.irc.listener.IRCHandler;
+import org.irccom.irc.model.CurrentChannel;
+import org.irccom.irc.model.Message;
 import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.element.Channel;
-import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
-import org.kitteh.irc.client.library.event.channel.ChannelTopicEvent;
-import org.kitteh.irc.client.library.event.channel.RequestedChannelJoinCompleteEvent;
-import org.kitteh.irc.client.library.event.user.UserAccountStatusEvent;
-import org.kitteh.irc.client.library.event.user.UserNickChangeEvent;
-import org.irccom.irc.listener.IRCHandler;
+import org.kitteh.irc.client.library.element.User;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 
 
 public class MainWindowController   {
@@ -47,24 +50,27 @@ public class MainWindowController   {
     public Label serverNameLabel;
     public Label usersTableLabel;
     public Label motdLabel;
+    private final Tab serverTab = new Tab();
+    private final Tab channelTab = new Tab();
     public JFXTabPane upperTabPane;
+    public Button addNewChannelButton;
+    public MenuBar toolbar;
+    public BorderPane borderPane;
+    public StackPane stackRootPane;
     Client client = Connect.client.getClient();
     Hashtable<Channel, CurrentChannel> setOfMessageObsList = new Hashtable<>();
+    Hashtable<String, ObservableList<Message>> setOfPrivateMessageObsLists = new Hashtable<>();
     Hashtable<String, Tab> hashTableOfTabs = new Hashtable<>();
     Channel pointerCurrentChannel;
-    String userColor = "#2196f3";
-    String otherUserColor = "#424242";
+    DefaultSettings defaultSettings = new DefaultSettings();
     IRCHandler IRCHandler = new IRCHandler(this);
-    //NonNull Optional<User> user = Connect.user_;
-
-
 
     @FXML
     ObservableList<Message> serverMessages = FXCollections.observableArrayList();
     @FXML
     public ObservableList<Message> messageObsList = FXCollections.observableArrayList();
     @FXML
-    public ObservableSet<String> userObsList = FXCollections.observableSet();
+    public ObservableSet<org.kitteh.irc.client.library.element.User> userObsList = FXCollections.observableSet();
     @FXML
     public ObservableList<String> channelObsList =  FXCollections.observableArrayList();
     @FXML
@@ -72,47 +78,47 @@ public class MainWindowController   {
     @FXML
     public JFXListView<Message> messageJFXListView;
     @FXML
-    public JFXListView<String> channelsList;
+    public ListView<String> channelsList;
     @FXML
-    public JFXListView<String> userList;
+    public JFXListView<org.kitteh.irc.client.library.element.User> userList;
     @FXML
-    public JFXTextField typeField;
-
-
-
+    public TextField typeField;
 
 
     // register a listener for MainWindowController
-    public void registerListener(){
-       client.getEventManager().registerEventListener(this);
+    public void registerListeners(){
        client.getEventManager().registerEventListener(IRCHandler);
-    }
 
-    // Updating user's nickname when changed in the current, no point updating in every channel
-    @Handler
-    private  void onChannelNameUpdated(UserNickChangeEvent event){
-
-            Platform.runLater(() -> {
-                if(userObsList.contains(event.getOldUser().getNick())) {
-                    userObsList.remove(event.getOldUser().getNick());
-                    userObsList.add(event.getNewUser().getNick());
-                    userList.setItems(FXCollections.observableArrayList(userObsList));
-                    userList.refresh();
-                }
-            });
+       // Listening to actions performed on tabs
+        registerTabPaneListener();
     }
-    @Handler
-    private  void onChannelTopicUpdated(ChannelTopicEvent event){
-        Platform.runLater(() -> {
-            if(pointerCurrentChannel!=null)
-            if(pointerCurrentChannel.equals(event.getChannel())) {
-                motdLabel.setText(event.getNewTopic().getValue().get());
-            }
+    private void registerTabPaneListener(){
+
+        upperTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            int selectedIndex = upperTabPane.getSelectionModel().getSelectedIndex();
+            switch (selectedIndex){
+                case 0:
+                    messageJFXListView.setItems(serverMessages);
+                    break;
+                case 1:
+                    if(pointerCurrentChannel!=null) {
+                        messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
+                    }
+                    break;
+                default:
+                    if(!setOfPrivateMessageObsLists.isEmpty()) {
+                        messageJFXListView.setItems(setOfPrivateMessageObsLists.get(newTab.getText()));
+                        messageJFXListView.refresh();
+                    }
+                    break;
+                    }
+
+
+
+
+
         });
     }
-
-
-
 
    /* @FXML
     private void onMouseClicked(){
@@ -121,19 +127,14 @@ public class MainWindowController   {
     } */
 
     // After Complete join to the channel
-    @Handler
-    public void onChannelJoin(RequestedChannelJoinCompleteEvent event){
-
+    public void updateChannelListAndMessageSet(Channel channel){
         ObservableList<Message> newObsList = FXCollections.observableArrayList();
-        CurrentChannel cc = new CurrentChannel(newObsList,event.getChannel());
-        setOfMessageObsList.put(event.getChannel(),cc);
-
-
-            Platform.runLater(() -> {
-                    channelObsList.add(event.getChannel().getName());
-                    setChannels(channelObsList);
-            });
-
+        CurrentChannel cc = new CurrentChannel(newObsList,channel);
+        setOfMessageObsList.put(channel,cc);
+        Platform.runLater(() -> {
+            channelObsList.add(channel.getName());
+            setChannels(channelObsList);
+        });
     }
     // Load obs list into ListView for channels
     public void setChannels(ObservableList<String> list){
@@ -141,35 +142,13 @@ public class MainWindowController   {
         channelsList.refresh();
     }
     // Load obs list into ListView for users
-    public void setUsers(ObservableList<String> list){
+    public void setUsers(ObservableList<org.kitteh.irc.client.library.element.User> list){
         userList.setItems(list);
         userList.refresh();
     }
 
-
-    // on message event listener
-    @Handler
-    public void onChannelMessage(ChannelMessageEvent event ) {
-        Platform.runLater(() -> {
-            setOfMessageObsList.get(event.getChannel()).getMsgObsList().add(new Message(event.getActor().getNick(), event.getMessage()));
-            messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
-        });
-        {
-            messageJFXListView.refresh();
-        }
-    }
-
-    public void addMessageToList(Message message, Channel channel){
-        Platform.runLater(() -> {
-            setOfMessageObsList.get(channel).getMsgObsList().add(message)
-            setOfMessageObsList.get(event.getChannel()).getMsgObsList().add(new Message(event.getActor().getNick(), event.getMessage()));
-            messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
-        });
-        {
-            messageJFXListView.refresh();
-        }
-    }
     private void setCustomCellFactoryChatList(){
+
 
         messageJFXListView.setCellFactory(new Callback<ListView<Message>, ListCell<Message>>() {
             @Override
@@ -181,19 +160,24 @@ public class MainWindowController   {
                         if (empty || item == null || item.getMessage() == null) {
                             setText(null);
                         } else if(item.getNickname() == null) {
-                            setText(item.getMessage()); // no formatting here yet
+                            setText(item.getMessage()); // Server messages
                         }
                         else{
                             setText(null);
+                            TextFlow messageCell = new TextFlow();
                             Text nickname = new Text();
                             Text message = new Text();
-                            TextFlow messageCell = new TextFlow(nickname,message);
+                            messageCell.getChildren().addAll(nickname,message);
                             if(!item.getNickname().equals(client.getClient().getNick())) {
-                                nickname.setStyle("-fx-fill:#424242;-fx-font-weight:bold;");
+
+                                nickname.setStyle("-fx-fill:"+defaultSettings.colorMap.get("OTHER_USER")
+                                +";-fx-font-weight:bold;");
                             }
                             else {
-                                nickname.setStyle("-fx-fill:#2196f3;-fx-font-weight:bold;");
+                                nickname.setStyle("-fx-fill:"+defaultSettings.colorMap.get("USER")
+                                        +";-fx-font-weight:bold;");
                             }
+                            System.out.println(item.getRole());
                             nickname.setText("<" + item.getNickname() + "> ");
                             message.setText(item.getMessage());
                             setGraphic(messageCell);
@@ -202,25 +186,60 @@ public class MainWindowController   {
                 };
             }
         });
-    }
-          /*chat_window.setCellFactory(param -> new ListCell<Message>() {
-
+        userList.setCellFactory(new Callback<ListView<User>, ListCell<User>>() {
             @Override
-            protected void updateItem(Message item, boolean empty) {
-                super.updateItem(item, empty);
+            public ListCell<User> call(ListView<User> param) {
+                return new JFXListCell<User>(){
+                    @Override
+                    public void updateItem(User item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        }
+                        else{
+                            item.getNick();
+                            setText(null);
+                            TextFlow messageCell = new TextFlow();
+                            Text nickname = new Text();
+                            messageCell.getChildren().add(nickname);
+                            if(!item.getNick().equals(client.getClient().getNick())) {
 
-                if (empty || item == null || item.getMessage() == null) {
-                    setText(null);
-                } else if(item.getNickname() == null) {
-                    setText(item.getMessage());
-                }
-                else{
-                    setText("<" + item.getNickname() + "> " + item.getMessage());
-                }
-
+                                nickname.setStyle("-fx-fill:"+defaultSettings.colorMap.get("OTHER_USER")
+                                        +";-fx-font-weight:bold;");
+                            }
+                            else {
+                                nickname.setStyle("-fx-fill:"+defaultSettings.colorMap.get("USER")
+                                        +";-fx-font-weight:bold;");
+                            }
+                            nickname.setText(item.getNick());
+                            setGraphic(messageCell);
+                        }
+                    }
+                };
             }
-        });*/
+        });
 
+    }
+
+
+
+    /*chat_window.setCellFactory(param -> new ListCell<Message>() {
+
+                @Override
+                protected void updateItem(Message item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null || item.getMessage() == null) {
+                        setText(null);
+                    } else if(item.getNickname() == null) {
+                        setText(item.getMessage());
+                    }
+                    else{
+                        setText("<" + item.getNickname() + "> " + item.getMessage());
+                    }
+
+                }
+            });*/
        /* ListCell<Message> cell = new ListCell<>();
 
         chat_window.setCellFactory(lv -> {
@@ -247,14 +266,12 @@ public class MainWindowController   {
             return cell;
         });
             } */
-
-
     // Switching channels via double click, load proper user and message lists
     private void setCustomCellFactory(){
         channelsList.setCellFactory(lv -> {
 
             {
-                ListCell<String> cell = new ListCell<>();;
+                ListCell<String> cell = new ListCell<>();
                 ContextMenu contextMenu = new ContextMenu();
 
                 MenuItem deleteItem = new MenuItem();
@@ -264,32 +281,23 @@ public class MainWindowController   {
                 deleteItem.setOnAction(event ->
 
                 {
-                    channelsList.getItems().remove(cell.getItem());
                     client.removeChannel(channelsList.getItems().get(cell.getIndex()));
+                    channelsList.getItems().remove(cell.getItem());
+
                 });
                 contextMenu.getItems().
-
                         addAll(deleteItem);
-
                 cell.textProperty().
                         bind(cell.itemProperty());
-
                 cell.emptyProperty().
-
                         addListener((obs, wasEmpty, isNowEmpty) ->
-
                         {
-
                             if (isNowEmpty) {
-
                                 cell.setContextMenu(null);
-
                             } else {
-
                                 cell.setContextMenu(contextMenu);
                             }
                         });
-
                 return cell;
             }
         });
@@ -297,28 +305,67 @@ public class MainWindowController   {
 
                 channelsList.setOnMouseClicked(event -> {
             if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                upperTabPane.getSelectionModel().select(channelTab);
                 motdLabel.setText("");
                 pointerCurrentChannel = client.getChannel(channelsList.getSelectionModel().getSelectedItem()).get();
                 messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
                 userObsList.clear();
-                userObsList.addAll(pointerCurrentChannel.getNicknames());
+                userObsList.addAll(pointerCurrentChannel.getUsers());
                 userList.setItems(FXCollections.observableArrayList(userObsList));
                 usersTableLabel.setText(userObsList.size() + " Użytkowników"); // Get the number of users in channel user switched to
                 if(pointerCurrentChannel.getTopic().getValue().isPresent())
                 motdLabel.setText(pointerCurrentChannel.getTopic().getValue().get()); // Get the topic for channel user switched to
+
             }
         });
     }
-
-
     // Sending input from input field to the server
+    @FXML
+    private void handleNewChannelButton(ActionEvent event){
+        JFXButton button = new JFXButton("Dodaj");
+        button.setStyle("-fx-background-color: #29b6f6");
+        createJFXDialog(stackRootPane,borderPane, Collections.singletonList(button),"Dodaj nowy kanał","Wprowadź nazwę #kanału");
+    }
+    public void createJFXDialog(StackPane root, Node blurredNode, List<JFXButton> controls, String header, String body) {
+        TextField channel_name = new TextField();
+        BoxBlur blur = new BoxBlur(3, 3, 3);
+        if (controls.isEmpty()) {
+            controls.add(new JFXButton("Dodaj"));
+        }
+        JFXDialogLayout dialogLayout = new JFXDialogLayout();
+        JFXDialog dialog = new JFXDialog(root, dialogLayout, JFXDialog.DialogTransition.TOP);
+
+        controls.forEach(controlButton -> {
+            controlButton.getStyleClass().add("confirm-button");
+            controlButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
+
+                dialog.close();
+            });
+        });
+        dialogLayout.setHeading(new Label(header));
+        dialogLayout.setBody(new Label(body));
+        dialogLayout.setBody(channel_name);
+        dialogLayout.setActions(controls);
+        dialog.show();
+        dialog.setOnDialogClosed((JFXDialogEvent event1) -> {
+            blurredNode.setEffect(null);
+
+            Platform.runLater(() -> {
+                if(!channel_name.getText().isEmpty()) {
+                    client.addChannel(channel_name.getText());
+                }
+            });
+        });
+        blurredNode.setEffect(blur);
+
+    }
+
+
     @FXML
     private void onEnterKeyPress(){
         typeField.setOnKeyReleased(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER)  {
+            if (keyEvent.getCode() == KeyCode.ENTER && typeField.isFocused())  {
                 String message = typeField.getText();
-                client.sendCtcpMessage(pointerCurrentChannel,message);
-                client.sendRawLine(message);
                 client.sendMessage(pointerCurrentChannel,message);
                 setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList().add(new Message(client.getNick(), message));
                 // clear text from input field and refresh the message view
@@ -329,7 +376,6 @@ public class MainWindowController   {
     // Local time clock implementation
     @FXML
     private void beginClock() {
-
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             labelRightBottom.setText(LocalDateTime.now().format(format));
@@ -349,23 +395,39 @@ public class MainWindowController   {
         setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList().add(new Message(imageView));
 
     } */
-
-
-
-
+    // Updating user's nickname when changed in the current, no point updating in every channel
+    public void updateUserList(org.kitteh.irc.client.library.element.User oldUser, User newUser){
+        Platform.runLater(() -> {
+            if(userObsList.contains(oldUser)) {
+                userObsList.remove(oldUser);
+                userObsList.add(newUser);
+                userList.setItems(FXCollections.observableArrayList(userObsList));
+                userList.refresh();
+            }
+        });
+    }
+    public void updateChannelTopic(Channel channel,String topic){
+        Platform.runLater(() -> {
+            if(pointerCurrentChannel!=null)
+                if(pointerCurrentChannel.equals(channel)) {
+                    motdLabel.setText(topic);
+                }
+        });
+    }
+    public void addMessageToList(Message message, Channel channel){
+        Platform.runLater(() -> {
+            setOfMessageObsList.get(channel).getMsgObsList().add(message);
+            messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
+        });
+        {
+            messageJFXListView.refresh();
+        }
+    }
     public void newServerMessage(Message serverMessage){
         Platform.runLater(() -> {
             serverMessages.add(serverMessage);
         });
     }
-
-
-    @Handler
-    public void onAccountStatusEvent(UserAccountStatusEvent event){
-
-    }
-
-
     public void setMessageListAndServerLabel(String serverName){
         Platform.runLater(() -> {
         messageJFXListView.setItems(serverMessages);
@@ -373,7 +435,6 @@ public class MainWindowController   {
         messageJFXListView.refresh();
         });
     }
-
     public void createNewTab(Message message){
         Platform.runLater(() -> {
             if(!hashTableOfTabs.containsKey(message.getNickname())){
@@ -381,24 +442,40 @@ public class MainWindowController   {
                 tab.setText(message.getNickname());
                 hashTableOfTabs.put(message.getNickname(),tab);
                 upperTabPane.getTabs().add(tab);
+                ObservableList<Message> newObsList = FXCollections.observableArrayList();
+                newObsList.add(message);
+                setOfPrivateMessageObsLists.put(message.getNickname(),newObsList);
             }
+            else {
+                setOfPrivateMessageObsLists.get(message.getNickname()).add(message);
+            }
+
         });
     }
-
-
 
 
     // Initialize method
     @FXML
     public  void initialize() throws IOException {
-
-
-        registerListener();
+        defaultSettings.init();
+        registerListeners();
         setCustomCellFactoryChatList();
         setCustomCellFactory();
         beginClock();
+        setupDefaultTabs();
         typeField.requestFocus();
+
     }
+
+    private void setupDefaultTabs() {
+        serverTab.setText("Serwer");
+        channelTab.setText("Kanał");
+        upperTabPane.autosize();
+        upperTabPane.getTabs().addAll(serverTab,channelTab);
+        upperTabPane.getSelectionModel().clearSelection();
+    }
+
+
 }
 
 

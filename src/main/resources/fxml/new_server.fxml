@@ -14,13 +14,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="stackPane" prefHeight="314.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.NewServerController">
+<StackPane fx:id="stackPane" prefHeight="320.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.NewServerController">
    <children>
       <JFXTabPane>
          <tabs>
             <Tab text="Nowy Serwer">
                <content>
-                  <VBox alignment="BASELINE_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" spacing="10.0">
+                  <VBox alignment="BASELINE_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="353.0" spacing="10.0">
                      <children>
                         <JFXTextField fx:id="newServerName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" promptText="Nazwa" />
                         <JFXTextField fx:id="newServerIpAddress" promptText="Adres IP" />

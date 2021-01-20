@@ -1,0 +1,14 @@
+
+.list-cell:odd{
+    -fx-background-color: inherit;
+}
+.list-cell:even{
+    -fx-background-color: inherit;
+}
+.list-cell:filled:selected {
+    -fx-background-color: -fx-background ;
+    -fx-background-insets: 0 ;
+}
+.jfx-list-view{
+    -fx-padding: 0px;
+}
