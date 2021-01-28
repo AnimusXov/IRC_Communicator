@@ -1,6 +1,5 @@
 package org.irccom.listener;
 
-
 import net.engio.mbassy.listener.Handler;
 import org.irccom.irc.Connect;
 import org.kitteh.irc.client.library.Client;
@@ -26,7 +25,5 @@ public class MessageListener {
         String message = event.getMessage();
         System.out.println(message);
     }
-
-
 
 }

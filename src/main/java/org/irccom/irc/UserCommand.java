@@ -11,10 +11,6 @@ public enum UserCommand {
         }
     },
 
-
-
-
-
     ;
 
     public abstract void join(String channel, Client client);

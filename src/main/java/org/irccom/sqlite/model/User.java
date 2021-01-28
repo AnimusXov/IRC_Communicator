@@ -9,7 +9,6 @@ public class User {
     String password;
     String channels;
 
-
     public User(int id, String nickname, String alt_nickname, String realname, String username, String password, String channels) {
         this.id = id;
         this.nickname = nickname;

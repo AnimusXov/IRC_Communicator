@@ -18,7 +18,6 @@ public class Session {
          return null;
     } */
 
-
     public List<String> getUsers(String channel, Client client) {
         if (client.getChannel(channel).isPresent()) {
             Channel ircChannel = client.getChannel(channel).get();

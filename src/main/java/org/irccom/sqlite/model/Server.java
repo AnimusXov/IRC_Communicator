@@ -34,7 +34,6 @@ public class Server {
         return port;
     }
 
-
     public void setPort(String port) {
         this.port = port;
     }
@@ -51,7 +50,6 @@ public class Server {
         this.ip = ip;
         this.port = port;
     }
-
 
     @Override
     public String toString() {

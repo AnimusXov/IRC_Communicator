@@ -20,7 +20,6 @@ public class Connect {
         builder.listeners().exception(Throwable::printStackTrace);
 
         if(!server.getPort().equals("6697")){
-            System.out.println("dupa2");
             if(isUserInfo)
            buildInsecureConnection(user,server);
             else
@@ -30,7 +29,6 @@ else {
             if (!isUserInfo) {
                 buildDefaultConnect(server, user);
             } else {
-                System.out.println("dupaOK");
                 client = Client.builder()
                         .nick(user.getNickname())
                         .name(user.getUsername())
@@ -72,18 +70,25 @@ else {
                 .buildAndConnect();
     }
 
-
     public void buildDefaultConnect(Server server, User user){
         client = Client.builder()
                 .nick(user.getNickname())
                 .name(user.getUsername())
+				.realName("KhIRC")
                 .server()
                 .host(server.getIp())
                 .then()
                 .buildAndConnect();
     }
-
-
-
+private boolean isNamesEmpty(User user){
+	return user.getNickname().isEmpty() || user.getUsername().isEmpty();
+}
+private User setDefaultNames(User user){
+    	if(isNamesEmpty(user)){
+    		user.setNickname("Guest1234");
+    		user.setUsername("Guest12345");
+	    }
+    	return user;
+}
 
 }

@@ -6,7 +6,6 @@ public class GlobalInstances {
     private static Server selectedServer;
     private static Boolean isPopulate;
 
-
     public Boolean getPopulate() {
         return isPopulate;
     }
@@ -22,6 +21,5 @@ public class GlobalInstances {
     public void setServer(Server server) {
         GlobalInstances.selectedServer = server;
     }
-
 
 }

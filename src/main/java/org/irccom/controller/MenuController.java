@@ -30,7 +30,6 @@ import org.irccom.sqlite.UserGenericDaoImpl;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
 public class MenuController {
 
     public JFXButton editServer;
@@ -44,10 +43,6 @@ public class MenuController {
     private boolean isSortedReversed = false;
     GlobalInstances helper = new GlobalInstances();
 
-
-
-
-
     private final GenericDao<Server,Integer> SERVER_DAO = new ServerGenericDaoImpl();
     private final GenericDao<User,Integer> USER_DAO = new UserGenericDaoImpl();
 
@@ -55,7 +50,6 @@ public class MenuController {
     ObservableList<Server> obsServerList = FXCollections.observableArrayList(SERVER_DAO.getAll());
     @FXML
     JFXListView<Server> serverList = new JFXListView<>();
-
 
     @FXML
     public void openNewWindow(String fxml, boolean isClose_stage, String title) throws IOException {
@@ -81,12 +75,12 @@ public class MenuController {
         }
         else {
             old_stage.close();
-            JMetro jMetro = new JMetro(Style.LIGHT);
-            jMetro.setAutomaticallyColorPanes(false);
+           // JMetro jMetro = new JMetro(Style.LIGHT);
+          //  jMetro.setAutomaticallyColorPanes(false);
           //  jMetro.getOverridingStylesheets().add("/stylesheet/chatListView.css");
             stage.setMinWidth(1200);
             stage.setMinHeight(800);
-            jMetro.setScene(scene);
+          //  jMetro.setScene(scene);
             stage.setScene(scene);
             stage.show();
         }
@@ -138,10 +132,7 @@ public class MenuController {
              }
          }
 
-
-
     }
-
 
     @FXML
     private void handleSortServerButtonAction(ActionEvent event) {
@@ -167,7 +158,6 @@ public class MenuController {
    public void initEventBus(){
        eb.register(new BooleanEventListener());
    }
-
 
    @FXML
     public void initialize() throws SQLException {

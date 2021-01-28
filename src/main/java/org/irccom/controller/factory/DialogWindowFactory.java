@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public class DialogWindowFactory {
 
-
     public static boolean showConfirmDialog(String title, String content) {
         ButtonType yes = new ButtonType("Potwierdź", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Analuj", ButtonBar.ButtonData.CANCEL_CLOSE);

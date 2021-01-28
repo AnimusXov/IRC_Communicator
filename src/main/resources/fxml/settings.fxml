@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXColorPicker?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane prefHeight="544.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.SettingsController">
+   <center>
+      <JFXMasonryPane VSpacing="10.0" cellHeight="30.0" cellWidth="100.0" limitColumn="6" limitRow="6">
+         <children>
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Właściciel Kanału" />
+            <JFXColorPicker fx:id="ownerColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Operator" />
+            <JFXColorPicker fx:id="operatorColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Pół-Operator" />
+            <JFXColorPicker fx:id="halfOpColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Admin" />
+            <JFXColorPicker fx:id="ircAdminColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Mój kolor" />
+            <JFXColorPicker fx:id="myColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="cos tam" />
+            <JFXColorPicker fx:id="otherUsers" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
+         </children>
+      </JFXMasonryPane>
+   </center>
+   <bottom>
+      <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <JFXButton buttonType="RAISED" prefWidth="150.0" style="-fx-background-color: #29b6f6;" text="Zapisz" textFill="WHITE" />
+            <JFXButton buttonType="RAISED" prefWidth="150.0" style="-fx-background-color: #29b6f6;" text="Resetuj" textFill="WHITE" />
+            <JFXButton buttonType="RAISED" prefWidth="150.0" style="-fx-background-color: #29b6f6;" text="Anuluj" textFill="WHITE" />
+         </children>
+      </HBox>
+   </bottom>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</BorderPane>

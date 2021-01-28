@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.fxmisc.cssfx.CSSFX;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+	    CSSFX.start();
         setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         scene = new Scene(loadFXML("/fxml/menu"), 380,475 );
         stage.setScene(scene);

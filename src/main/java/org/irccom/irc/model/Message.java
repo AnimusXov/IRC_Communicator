@@ -1,11 +1,26 @@
 package org.irccom.irc.model;
 
+import javafx.scene.image.ImageView;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.irccom.controller.model.PrefixUser;
+
+@Getter
+@Setter
 public class Message {
     private String nickname;
-    private String message;
-    private String role;
+    private  String message;
+    private PrefixUser prefixUser;
+    private ImageView image;
+    boolean hasImage;
 
-    public String getNickname() {
+public Message(){
+
+}
+
+
+public String getNickname() {
         return nickname;
     }
 
@@ -14,19 +29,19 @@ public class Message {
         this.message = message;
     }
 
-    public Message(String nickname, String message, String role) {
-        this.nickname = nickname;
-        this.message = message;
-        this.role = role;
-    }
 
-    public String getMessage() {
-        return message;
-    }
 
-    public String getRole() {
-        return role;
-    }
+public Message( String message, PrefixUser prefixUser ){
+	this.message = message;
+	this.prefixUser = prefixUser;
+}
+
+public Message( String nickname, String message, PrefixUser prefixUser ){
+	this.nickname = nickname;
+	this.message = message;
+	this.prefixUser = prefixUser;
+}
+
 
     public Message(String message) {
         this.message = message;

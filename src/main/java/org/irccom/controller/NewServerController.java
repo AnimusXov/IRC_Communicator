@@ -25,7 +25,6 @@ import java.util.Optional;
 
 public class NewServerController   {
 
-
     public JFXButton addNewChannelButton;
     EventBus eb = new EventBus();
 
@@ -47,8 +46,7 @@ public class NewServerController   {
 
     GlobalInstances helper = new GlobalInstances();
 
-
-    private ObservableSet<String> channelsSet = FXCollections.observableSet();
+    private final ObservableSet<String> channelsSet = FXCollections.observableSet();
 
     @FXML
     private void handleNewServerSaveButtonAction(ActionEvent event) {
@@ -77,11 +75,9 @@ public class NewServerController   {
         else
         SERVER_DAO.save(server);
 
-
     }
     private void saveNewUser(boolean isUpdate){
         User user = new User();
-
 
         user.setNickname(newServerNickname.getText());
         user.setAlt_nickname(newServerAlternativeNickname.getText());
@@ -116,10 +112,6 @@ public class NewServerController   {
         autoJoinChannelsListView.refresh();
     }
 
-
-
-
-
     private void populateFields(){
         newServerName.setText(helper.getSelectedServerServer().getName());
         newServerIpAddress.setText(helper.getSelectedServerServer().getIp());
@@ -144,8 +136,6 @@ public class NewServerController   {
     private ArrayList<String> stringToArray (String string){
         return new ArrayList<>(Arrays.asList(string.split(",")));
         }
-
-
 
     @FXML
     public void initialize() {

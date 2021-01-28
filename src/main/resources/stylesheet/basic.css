@@ -5,15 +5,11 @@
 .jfxTextField{
     -fx-background-color:#fafafa;
 }
-
-.anchorPaneMainWindow {
-
+.jfxTextField:focused{
+    -fx-focus-color: transparent;
+    -fx-background-insets: -1.4, 0, 1, 2;
 }
 
-
-.borderPaneMainWindow{
-
-}
 
 .label{
     -fx-background-color: #1b75bc;

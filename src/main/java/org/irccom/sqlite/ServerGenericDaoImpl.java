@@ -7,12 +7,8 @@ import org.irccom.sqlite.model.Server;
 import java.sql.*;
 import java.util.*;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
-
 
 public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
     private static final Logger logger = LogManager.getLogger(ServerGenericDaoImpl.class);
@@ -173,6 +169,5 @@ public class ServerGenericDaoImpl implements GenericDao<Server, Integer> {
             }
         });
     }
-
 
 }

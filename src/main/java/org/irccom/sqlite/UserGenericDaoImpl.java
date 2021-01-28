@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.message.Message;
 
-
 public class UserGenericDaoImpl implements GenericDao<User, Integer> {
     private static final Logger logger = LogManager.getLogger(UserGenericDaoImpl.class);
     private final Optional<Connection> connection;
@@ -111,8 +110,6 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
 
                 int numberOfInsertedRows = statement.executeUpdate();
 
-
-
                 logger.log(Level.INFO, "{0} został stworzony pomyślnie {1}",
                         new Object[]{nonNullCustomer, numberOfInsertedRows > 0});
             } catch (SQLException ex) {
@@ -147,7 +144,6 @@ public class UserGenericDaoImpl implements GenericDao<User, Integer> {
                 statement.setString(5, nonNullCustomer.getPassword());
                 statement.setString(6, nonNullCustomer.getChannels());
                 statement.setInt(7, nonNullCustomer.getId());
-
 
                 int numberOfUpdatedRows = statement.executeUpdate();
 

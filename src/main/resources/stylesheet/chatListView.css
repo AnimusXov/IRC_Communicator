@@ -9,6 +9,10 @@
     -fx-background-color: -fx-background ;
     -fx-background-insets: 0 ;
 }
+.list-cell:filled:focused{
+    -fx-focus-color: transparent;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
 .jfx-list-view{
     -fx-padding: 0px;
 }

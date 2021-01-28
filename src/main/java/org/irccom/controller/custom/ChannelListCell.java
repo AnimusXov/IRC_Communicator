@@ -11,17 +11,12 @@ public class ChannelListCell extends ListCell<String> {
     ListCell<String> cell = this;
     int i = 0;
 
-
-
     public ChannelListCell(ListView<String> listView)
     {
 
         ContextMenu contextMenu = new ContextMenu();
 
-
         cell.setEditable(true);
-
-
 
         MenuItem editItem = new MenuItem();
         editItem.textProperty().bind(Bindings.format("Edytuj \"%s\"", cell.itemProperty()));
@@ -31,9 +26,6 @@ public class ChannelListCell extends ListCell<String> {
             // The LanguageListCell class i want to put here...
             cell.startEdit();
         });
-
-
-
 
         MenuItem deleteItem = new MenuItem();
         deleteItem.textProperty().bind(Bindings.format("Usuń \"%s\"", cell.itemProperty()));
@@ -51,8 +43,6 @@ public class ChannelListCell extends ListCell<String> {
                     listView.getItems().remove(item);
 
                 }
-
-
 
             }
             listView.getItems().remove(cell.getItem());
@@ -80,11 +70,7 @@ public class ChannelListCell extends ListCell<String> {
             }
         });
 
-
-
     }
-
-
 
     public String getString() {
         return getItem() == null ? "" : getItem();
@@ -103,8 +89,6 @@ public class ChannelListCell extends ListCell<String> {
         textField.selectAll();
         textField.requestFocus();
     }
-
-
 
     @Override
     public void cancelEdit() {
@@ -147,8 +131,6 @@ public class ChannelListCell extends ListCell<String> {
                     setGraphic(null);
                     setGraphic(getGraphic());
                 }
-
-
 
             } else if (t.getCode() == KeyCode.ESCAPE) {
                 cancelEdit();

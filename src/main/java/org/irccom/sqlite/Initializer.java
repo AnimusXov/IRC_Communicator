@@ -7,7 +7,6 @@ public class Initializer {
     static Connection conn = null;
     String dbName;
 
-
     public Initializer() {
     }
 
@@ -52,7 +51,5 @@ public class Initializer {
             System.out.println(e.getMessage());
         }
     }
-
-
 
 }

@@ -5,6 +5,10 @@
 .list-cell:even{
     -fx-background-color: white;
 }
-.jfx-list-view{
-    -fx-padding: 0px;
+
+list-cell:filled:selected {
+    -fx-background-color: -fx-background ;
+    -fx-background-insets: 0 ;
 }
+
+.jfx-list-view{ -fx-background-insets: 0; -fx-padding: 0; }
