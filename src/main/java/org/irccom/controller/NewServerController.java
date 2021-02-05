@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.StackPane;
 import org.irccom.controller.custom.ChannelCellFactory;
+import org.irccom.helper.Converter;
 import org.irccom.helper.GlobalInstances;
 import org.irccom.sqlite.model.Server;
 import org.irccom.sqlite.model.User;
@@ -27,6 +28,7 @@ public class NewServerController   {
 
     public JFXButton addNewChannelButton;
     EventBus eb = new EventBus();
+    Converter converter = new org.irccom.helper.Converter();
 
     public JFXTextField newServerName;
     public JFXTextField newServerIpAddress;
@@ -124,7 +126,7 @@ public class NewServerController   {
              newServerUsername.setText(value.getUsername());
              newServerPassword.setText(value.getPassword());
              if(value.getChannels()!=null) {
-                 channelsSet.addAll(stringToArray(value.getChannels()));
+                 channelsSet.addAll(converter.stringToArray(value.getChannels()));
                  autoJoinChannelsListView.setItems(FXCollections.observableArrayList(channelsSet));
                  autoJoinChannelsListView.refresh();
              }
@@ -133,9 +135,6 @@ public class NewServerController   {
 
     }
 
-    private ArrayList<String> stringToArray (String string){
-        return new ArrayList<>(Arrays.asList(string.split(",")));
-        }
 
     @FXML
     public void initialize() {

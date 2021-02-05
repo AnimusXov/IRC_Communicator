@@ -38,7 +38,7 @@ public class IRCHandler {
 
     // Handles private messages
     @Handler
-    public void onPrivmsg(PrivateMessageEvent event) {
+    public void onPrivateMessage( PrivateMessageEvent event) {
         if(!(event.getActor().getNick().isEmpty() && event.getMessage().isEmpty()))
         controller.createNewTab(new Message(event.getActor().getNick(),event.getMessage()));
     }

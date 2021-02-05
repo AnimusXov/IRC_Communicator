@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
 <StackPane fx:id="stackRootPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.MainWindowController">
    <children>
@@ -81,7 +82,7 @@
             </VBox>
          </right>
          <top>
-            <VBox BorderPane.alignment="CENTER">
+            <VBox prefHeight="135.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
                <children>
                   <MenuBar fx:id="toolbar" prefHeight="33.0" prefWidth="1200.0" stylesheets="@../stylesheet/toolbar.css">
                     <menus>
@@ -103,23 +104,27 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                  <HBox prefHeight="13.0" prefWidth="1200.0" VBox.vgrow="NEVER">
+                  <HBox prefHeight="70.0" prefWidth="1200.0" VBox.vgrow="NEVER">
                      <children>
-                        <Label fx:id="serverNameLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="35.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
-                           <padding>
-                              <Insets top="20.0" />
-                           </padding>
-                        </Label>
-                        <StackPane maxHeight="-Infinity" minHeight="35.0" prefHeight="35.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
+                        <TextFlow>
                            <children>
-                              <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="35.0" prefHeight="56.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabMinHeight="30.0">
+                              <Label fx:id="serverNameLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
+                                 <padding>
+                                    <Insets top="20.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </TextFlow>
+                        <StackPane maxHeight="-Infinity" minHeight="35.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
+                           <children>
+                              <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="47.0" prefHeight="35.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabClosingPolicy="ALL_TABS" tabMinHeight="30.0" StackPane.alignment="BOTTOM_CENTER">
                                  <effect>
                                     <DropShadow />
                                  </effect>
                               </JFXTabPane>
                            </children>
                         </StackPane>
-                        <Label fx:id="usersTableLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="35.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
+                        <Label fx:id="usersTableLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
                            <font>
                               <Font name="Roboto Black" size="12.0" />
                            </font>
@@ -132,16 +137,20 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="BASELINE_CENTER" prefHeight="19.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
+                  <HBox alignment="BASELINE_CENTER" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
                      <children>
-                        <Label fx:id="motdLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="25.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" textAlignment="CENTER">
-                           <font>
-                              <Font name="Roboto Black" size="12.0" />
-                           </font>
-                           <padding>
-                              <Insets bottom="5.0" />
-                           </padding>
-                        </Label>
+                        <TextFlow>
+                           <children>
+                              <Label fx:id="motdLabel" alignment="BASELINE_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="40.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Roboto Black" size="12.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </TextFlow>
                      </children>
                   </HBox>
                </children>

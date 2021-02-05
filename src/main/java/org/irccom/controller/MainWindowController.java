@@ -1,6 +1,5 @@
 package org.irccom.controller;
 
-import com.google.common.collect.Lists;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.animation.Animation;
@@ -32,11 +31,10 @@ import javafx.util.Duration;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import lombok.SneakyThrows;
-import org.apache.poi.util.StringUtil;
 import org.irccom.controller.factory.MessageCompomentFactory;
 import org.irccom.controller.factory.SceneFactory;
 import org.irccom.controller.model.PrefixUser;
-import org.irccom.controller.preset.DefaultSettings;
+import org.irccom.controller.preset.Config;
 import org.irccom.helper.Validator;
 import org.irccom.irc.Connect;
 import org.irccom.irc.listener.IRCHandler;
@@ -51,10 +49,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MainWindowController   {
@@ -81,7 +76,7 @@ public class MainWindowController   {
     Hashtable<String, ObservableList<Message>> setOfPrivateMessageObsLists = new Hashtable<>();
     Hashtable<String, Tab> hashTableOfTabs = new Hashtable<>();
     Channel pointerCurrentChannel;
-    DefaultSettings defaultSettings = new DefaultSettings();
+    Config config = new Config();
     IRCHandler IRCHandler = new IRCHandler(this);
 
 
@@ -119,11 +114,13 @@ public class MainWindowController   {
                 case 0:
                     messageJFXListView.setItems(serverMessages);
 	                channelNameLabel.setText("");
-                    
+	                usersTableLabel.setText("");
+	                userList.setVisible(false);
                     break;
                 case 1:
                     if(pointerCurrentChannel!=null) {
                         messageJFXListView.setItems(setOfMessageObsList.get(pointerCurrentChannel).getMsgObsList());
+	                    userList.setVisible(true);
                         channelNameLabel.setText(pointerCurrentChannel.getName());
                     }
                     break;
@@ -131,10 +128,13 @@ public class MainWindowController   {
                     if(!setOfPrivateMessageObsLists.isEmpty()) {
                         messageJFXListView.setItems(setOfPrivateMessageObsLists.get(newTab.getText()));
 	                    channelNameLabel.setText("");
+	                    usersTableLabel.setText("");
+	                    userList.setVisible(false);
                         messageJFXListView.refresh();
                     }
                     break;
                     }
+	  
 
         });
     }
@@ -205,15 +205,21 @@ public class MainWindowController   {
                     
 	
 	                private void setMessageFormatting( Message item ){
-		                nickname.setStyle("-fx-fill:"+ DefaultSettings.colorMap.get(item.getPrefixUser().getPrefix())
-				                                  +";-fx-font-weight:bold;");
-		                if( item.getPrefixUser().getPrefix() == ' '){
-			                nickname.setStyle("-fx-fill:"+ DefaultSettings.colorMap.get(item.getPrefixUser().getPrefix()));
-			                nickname.setText("<" + item.getPrefixUser().getUser().getNick() + "> ");
-		                }
-		                else {
-			                nickname.setText("<" + item.getPrefixUser().getPrefix() + item.getPrefixUser().getUser().getNick() + "> ");
-		                }
+                    	if(item.getPrefixUser() != null) {
+		                    nickname.setStyle("-fx-fill:" + Config.userColorMap.get(item.getPrefixUser().getPrefix()) + ";-fx-font-weight:bold;");
+		                    if( item.getPrefixUser().getPrefix() == ' '){
+			                    nickname.setStyle("-fx-fill:"+ Config.userColorMap.get(item.getPrefixUser().getPrefix()));
+			                    nickname.setText("<" + item.getPrefixUser().getUser().getNick() + "> ");
+		                    }
+		                    else {
+			                    nickname.setText("<" + item.getPrefixUser().getPrefix() + item.getPrefixUser().getUser().getNick() + "> ");
+		                    }
+	                    }
+                    	else{
+		                    nickname.setStyle("-fx-fill:#2196f3;-fx-font-weight:bold;");
+		                    nickname.setText("<" + item.getNickname() + "> ");
+	                    }
+		            
 	                }
                 };
             }
@@ -227,6 +233,9 @@ public class MainWindowController   {
 	    userList.setCellFactory(new Callback<ListView<PrefixUser>, ListCell<PrefixUser>>() {
 		    @Override
 		    public ListCell<PrefixUser> call(ListView<PrefixUser> param) {
+			    TextFlow messageCell = new TextFlow();
+			    Text nickname = new Text();
+			    messageCell.getChildren().add(nickname);
 			    return new JFXListCell<PrefixUser>(){
 				    @Override
 				    public void updateItem(PrefixUser item, boolean empty) {
@@ -236,18 +245,12 @@ public class MainWindowController   {
 					    }
 					    else{
 						    setText(null);
-						    item.getUser().getNick();
-						    TextFlow messageCell = new TextFlow();
-						    Text nickname = new Text();
-						    messageCell.getChildren().add(nickname);
+						   
 						    pointerCurrentChannel.getUserModes(item.getUser()).ifPresent(thisUser -> {
 							    System.out.println(item.getPrefix());
-							    nickname.setStyle("-fx-fill:"+ DefaultSettings.colorMap.get(item.getPrefix()) +";-fx-font-weight:bold;");
-							    nickname.setText(String.valueOf(item.getPrefix()) + item.getUser().getNick());
+							    nickname.setStyle("-fx-fill:"+ Config.userColorMap.get(item.getPrefix()) +";-fx-font-weight:bold;");
+							    nickname.setText(item.getPrefix() + item.getUser().getNick());
 						    });
-						
-						
-						    nickname.setText(item.getUser().getNick());
 						    setGraphic(messageCell);
 					    }
 					   
@@ -314,7 +317,7 @@ public class MainWindowController   {
 			   }
 			        return 0;
 		    }
-		    if(DefaultSettings.metaMap.get(o2.getPrefix()) > DefaultSettings.metaMap.get(o1.getPrefix())) {
+		    if( Config.metaMap.get(o2.getPrefix()) > Config.metaMap.get(o1.getPrefix())) {
 			    return 1;
 		    }
 		            return 0;
@@ -359,12 +362,14 @@ public class MainWindowController   {
                 userObsList.addAll(pointerCurrentChannel.getUsers().stream()
 		                                   .map(user -> new PrefixUser(user,getUserNickPrefix(user)))
 		                .collect(Collectors.toList()));
+           
                 userList.setItems(FXCollections.observableArrayList(userObsList));
                 usersTableLabel.setText(userObsList.size() + " Użytkowników"); // Get the number of users in channel user switched to
 	            channelNameLabel.setText(pointerCurrentChannel.getName());
                 if(pointerCurrentChannel.getTopic().getValue().isPresent())
                 motdLabel.setText(pointerCurrentChannel.getTopic().getValue().get()); // Get the topic for channel user switched to
-               sortUserList();
+                sortUserList();
+	            userList.setVisible(true);
             }
         });
     }
@@ -373,7 +378,8 @@ public class MainWindowController   {
     private void handleNewChannelButton(ActionEvent event){
         JFXButton button = new JFXButton("Dodaj");
         button.setStyle("-fx-background-color: #29b6f6");
-        createJFXDialog(stackRootPane,borderPane, Collections.singletonList(button),"Dodaj nowy kanał","Wprowadź nazwę #kanału");
+        createJFXDialog(stackRootPane,borderPane, Collections.singletonList(button),"Dodaj nowy kanał",
+		        "Wprowadź nazwę #kanału");
     }
     public void createJFXDialog(StackPane root, Node blurredNode, List<JFXButton> controls, String header, String body) {
         TextField channel_name = new TextField();
@@ -441,17 +447,7 @@ public class MainWindowController   {
         clock.play();
     }
    
-    public ImageView getImageFromWeb(String url) throws IOException {
-	    System.out.println("zdjecie1");
-        URLConnection connection = new URL(url).openConnection();
-        connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-        Image image = new Image(connection.getInputStream());
-        ImageView imageView = new ImageView();
-        imageView.setSmooth(true);
-        imageView.setPreserveRatio(true);
-        imageView.setImage(image);
-        return  imageView;
-    }
+
     // Updating user's nickname when changed in the current, no point updating in every channel
 
     private char getUserNickPrefix(User user){
@@ -515,6 +511,9 @@ public class MainWindowController   {
                 setOfPrivateMessageObsLists.put(message.getNickname(),newObsList);
             }
             else {
+            	if(!upperTabPane.getTabs().contains(hashTableOfTabs.get(message.getNickname()))){
+		            upperTabPane.getTabs().add(hashTableOfTabs.get(message.getNickname()));
+	            }
                 setOfPrivateMessageObsLists.get(message.getNickname()).add(message);
             }
 
@@ -524,7 +523,7 @@ public class MainWindowController   {
     // Initialize method
     @FXML
     public  void initialize() {
-        defaultSettings.init();
+        config.init();
 	    setupCommandComboBox();
         registerListeners();
 	    setCustomUserListCellFactory();
@@ -536,7 +535,7 @@ public class MainWindowController   {
 	    setupJMetroStyle();
 
     }
-    
+    // Open colour preference window
     @FXML
     private void onPreferencesMenuItemClicked(ActionEvent event) throws IOException{
     	new SceneFactory().openNewWindow("settings.fxml",false, false,"Preferencje");
@@ -546,6 +545,7 @@ public class MainWindowController   {
     private void setupCommandComboBox(){
     
     }
+    // Apply JMetro Style to the elements on the stage
     private void setupJMetroStyle(){
 	    JMetro jMetro = new JMetro(Style.LIGHT);
 	    jMetro.setParent(messageJFXListView);
@@ -553,13 +553,15 @@ public class MainWindowController   {
 	    jMetro.setParent(upperTabPane);
 	    jMetro.setParent(commandComboBox);
     }
-
+    // Add basic tabs to the tabpane
     private void setupDefaultTabs() {
         serverTab.setText("Serwer");
         channelTab.setText("Kanał");
-        upperTabPane.autosize();
+        serverTab.setClosable(false);
+        channelTab.setClosable(false);
         upperTabPane.getTabs().addAll(serverTab,channelTab);
         upperTabPane.getSelectionModel().clearSelection();
+        
     }
 
 }

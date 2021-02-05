@@ -12,7 +12,6 @@ public class MessageCompomentFactory{
 
 
 public ImageView getImageFromWeb( String url) throws IOException{
-	System.out.println("dupskoZdjeciowe");
 	URLConnection connection = new URL(url).openConnection();
 	connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 	System.out.println(connection.getContentType());

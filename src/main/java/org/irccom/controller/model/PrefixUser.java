@@ -10,7 +10,7 @@ import org.kitteh.irc.client.library.element.User;
 @Setter
 public class PrefixUser{
 	 User user;
-	char prefix;
+	 char prefix;
 
 public PrefixUser( User user, char prefix ){
 	this.user = user;

@@ -10,4 +10,16 @@
 }
 .jfx-tab-pane {
     -fx-font: 18px "Roboto";
+    -fx-pref-width: 250;
+    -fx-min-height: 70;
+}
+
+.jfx-tab-pane .tab-close-button{
+    -fx-background-image : url("icon/close.png");
+    -fx-background-size : 15;
+    -fx-background-repeat : no-repeat;
+    -fx-background-position : bottom;
+    -fx-shape: null;
+    -fx-background-color: transparent;
+
 }

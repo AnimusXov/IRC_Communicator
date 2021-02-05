@@ -14,11 +14,8 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
 import org.irccom.controller.custom.ListViewComparator;
 import org.irccom.controller.factory.DialogWindowFactory;
-import org.irccom.guava.listener.BooleanEventListener;
 import org.irccom.helper.GlobalInstances;
 import org.irccom.irc.Connect;
 import org.irccom.sqlite.model.Server;
@@ -155,9 +152,6 @@ public class MenuController {
         }
     }
 
-   public void initEventBus(){
-       eb.register(new BooleanEventListener());
-   }
 
    @FXML
     public void initialize() throws SQLException {

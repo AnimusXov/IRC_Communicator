@@ -36,12 +36,18 @@ public class Initializer {
         String url = "jdbc:sqlite:" + databaseName;
 
         // SQL statement for creating a new table
-        String sql = "CREATE TABLE IF NOT EXISTS server (\n"
-                + " id integer PRIMARY KEY,\n"
-                + " name text NOT NULL,\n"
-                + " ip text NOT NULL,\n"
-                + " port text NOT NULL \n"
-                + ");";
+        String sql = "create table preference\n"
+		                     + "(\n" + "    id    int not null\n" +
+		                     "        constraint preference_pk\n" +
+		                     "            primary key,\n" + "    color text\n" + ");\n" + "\n" +
+		                     "create table server\n" + "(\n" + "    id   integer\n" +
+		                     "        primary key,\n" + "    name text not null,\n" +
+		                     "    ip   text not null,\n" + "    port text not null\n" + ");\n" +
+		                     "\n" + "create table user\n" + "(\n" + "    id           int not null\n" +
+		                     "        references server,\n" + "    nickname     text,\n" +
+		                     "    alt_nickname text,\n" + "    real_name    text,\n" + "    username     text,\n" +
+		                     "    password     text,\n" + "    channel      text\n" + ");\n" + "\n";
+        
 
         try{
             Connection conn = DriverManager.getConnection(url);
