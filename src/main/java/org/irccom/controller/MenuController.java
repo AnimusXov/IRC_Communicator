@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -80,6 +81,7 @@ public class MenuController {
           //  jMetro.setScene(scene);
             stage.setScene(scene);
             stage.show();
+	        stage.setOnCloseRequest(e -> Platform.exit());
         }
     }
     private void closeWindowEvent(WindowEvent event) {

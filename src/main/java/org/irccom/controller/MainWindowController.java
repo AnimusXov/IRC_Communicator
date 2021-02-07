@@ -7,10 +7,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -18,6 +20,7 @@ import javafx.scene.control.cell.ChoiceBoxTreeTableCell;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -44,6 +47,7 @@ import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.element.Channel;
 import org.kitteh.irc.client.library.element.User;
 
+import javax.swing.event.ChangeListener;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -69,7 +73,11 @@ public class MainWindowController   {
     public ChoiceBoxTreeTableCell<String,Integer> commandComboBox;
     public MenuButton commandMenu;
     public Label channelNameLabel;
-    public MenuItem preferencesMenuItem;
+    
+   public MenuItem privateMessage = new MenuItem();
+   public ContextMenu menu = new ContextMenu(privateMessage);
+  
+  
  
     Client client = Connect.client.getClient();
     Hashtable<Channel, CurrentChannel> setOfMessageObsList = new Hashtable<>();
@@ -101,8 +109,8 @@ public class MainWindowController   {
 
     // register a listener for MainWindowController
     public void registerListeners(){
+    	// register the listeners for IRC-related events
        client.getEventManager().registerEventListener(IRCHandler);
-
        // Listening to actions performed on tabs
         registerTabPaneListener();
     }
@@ -245,7 +253,6 @@ public class MainWindowController   {
 					    }
 					    else{
 						    setText(null);
-						   
 						    pointerCurrentChannel.getUserModes(item.getUser()).ifPresent(thisUser -> {
 							    System.out.println(item.getPrefix());
 							    nickname.setStyle("-fx-fill:"+ Config.userColorMap.get(item.getPrefix()) +";-fx-font-weight:bold;");
@@ -253,12 +260,11 @@ public class MainWindowController   {
 						    });
 						    setGraphic(messageCell);
 					    }
-					   
 				    }
 			    };
 		    }
-		 
 	    });
+
     }
 
     /*chat_window.setCellFactory(param -> new ListCell<Message>() {
@@ -524,6 +530,7 @@ public class MainWindowController   {
     @FXML
     public  void initialize() {
         config.init();
+	    initializeContextMenu();
 	    setupCommandComboBox();
         registerListeners();
 	    setCustomUserListCellFactory();
@@ -533,13 +540,26 @@ public class MainWindowController   {
         setupDefaultTabs();
         typeField.requestFocus();
 	    setupJMetroStyle();
+    }
 
-    }
-    // Open colour preference window
+private void initializeContextMenu(){
+
+}
+
+// Open colour preference window
     @FXML
-    private void onPreferencesMenuItemClicked(ActionEvent event) throws IOException{
-    	new SceneFactory().openNewWindow("settings.fxml",false, false,"Preferencje");
-    }
+private void onPreferencesMenuItemClicked(ActionEvent event) throws IOException{
+	new SceneFactory().openNewWindow("settings.fxml",false, false,"Preferencje");
+}
+// Exit the application
+@FXML
+private void onExitMenuItemClicked(ActionEvent event) throws IOException{
+    client.shutdown();
+	Platform.exit();
+	System.exit(0);
+	
+}
+
     
     
     private void setupCommandComboBox(){

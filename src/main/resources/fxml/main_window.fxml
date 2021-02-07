@@ -89,7 +89,7 @@
                       <Menu mnemonicParsing="false" text="JFFX">
                         <items>
                               <MenuItem mnemonicParsing="false" text="debug" />
-                          <MenuItem mnemonicParsing="false" text="Wyjdź" />
+                          <MenuItem id="exitMenuItem" mnemonicParsing="false" onAction="#onExitMenuItemClicked" text="Wyjdź" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Ustawienia">
@@ -104,9 +104,9 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                  <HBox prefHeight="70.0" prefWidth="1200.0" VBox.vgrow="NEVER">
+                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="1200.0" VBox.vgrow="NEVER">
                      <children>
-                        <TextFlow>
+                        <TextFlow prefWidth="200.0">
                            <children>
                               <Label fx:id="serverNameLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
                                  <padding>
@@ -115,12 +115,18 @@
                               </Label>
                            </children>
                         </TextFlow>
-                        <StackPane maxHeight="-Infinity" minHeight="35.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
+                        <StackPane alignment="BASELINE_CENTER" maxHeight="-Infinity" minHeight="35.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
                            <children>
-                              <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="47.0" prefHeight="35.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabClosingPolicy="ALL_TABS" tabMinHeight="30.0" StackPane.alignment="BOTTOM_CENTER">
+                              <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="47.0" prefHeight="60.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabClosingPolicy="ALL_TABS" tabMaxHeight="35.0" tabMinHeight="35.0" StackPane.alignment="BASELINE_CENTER">
                                  <effect>
                                     <DropShadow />
                                  </effect>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <StackPane.margin>
+                                    <Insets />
+                                 </StackPane.margin>
                               </JFXTabPane>
                            </children>
                         </StackPane>
@@ -139,9 +145,9 @@
                   </HBox>
                   <HBox alignment="BASELINE_CENTER" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
                      <children>
-                        <TextFlow>
+                        <TextFlow textAlignment="CENTER">
                            <children>
-                              <Label fx:id="motdLabel" alignment="BASELINE_LEFT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="40.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" textAlignment="CENTER">
+                              <Label id="motdLabelCSS" fx:id="motdLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="42.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" wrapText="true">
                                  <font>
                                     <Font name="Roboto Black" size="12.0" />
                                  </font>

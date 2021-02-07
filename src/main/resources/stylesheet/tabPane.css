@@ -11,7 +11,7 @@
 .jfx-tab-pane {
     -fx-font: 18px "Roboto";
     -fx-pref-width: 250;
-    -fx-min-height: 70;
+    -fx-min-height: 35;
 }
 
 .jfx-tab-pane .tab-close-button{
