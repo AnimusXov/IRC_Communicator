@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -107,7 +108,7 @@
       </VBox>
    </right>
    <center>
-      <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="245.0" prefWidth="135.0" BorderPane.alignment="CENTER">
+      <VBox maxHeight="1.7976931348623157E308" minHeight="268.0" minWidth="241.0" prefHeight="245.0" prefWidth="135.0" BorderPane.alignment="CENTER">
          <children>
             <Label contentDisplay="BOTTOM" prefHeight="25.0" prefWidth="301.0" text="Sieci">
                <font>
@@ -122,6 +123,7 @@
                   <Insets left="17.0" right="17.0" />
                </VBox.margin>
             </JFXListView>
+            <JFXToggleButton prefHeight="42.0" prefWidth="324.0" size="5.0" text="Użyj globalnych ustawień" />
          </children>
       </VBox>
    </center>

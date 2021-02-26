@@ -8,18 +8,19 @@ import org.irccom.controller.MainWindowController;
 import org.irccom.controller.factory.MessageCompomentFactory;
 import org.irccom.controller.model.PrefixUser;
 import org.irccom.helper.Validator;
+import org.irccom.irc.Connect;
 import org.irccom.irc.model.Message;
 import org.irccom.irc.model.User;
+import org.kitteh.irc.client.library.Client;
 import org.kitteh.irc.client.library.element.mode.ChannelUserMode;
-import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
-import org.kitteh.irc.client.library.event.channel.ChannelTopicEvent;
-import org.kitteh.irc.client.library.event.channel.RequestedChannelJoinCompleteEvent;
+import org.kitteh.irc.client.library.event.channel.*;
 import org.kitteh.irc.client.library.event.client.ClientNegotiationCompleteEvent;
+import org.kitteh.irc.client.library.event.client.NickRejectedEvent;
+import org.kitteh.irc.client.library.event.connection.ClientConnectionClosedEvent;
+import org.kitteh.irc.client.library.event.connection.ClientConnectionEstablishedEvent;
 import org.kitteh.irc.client.library.event.helper.ServerMessageEvent;
-import org.kitteh.irc.client.library.event.user.PrivateCtcpQueryEvent;
-import org.kitteh.irc.client.library.event.user.PrivateMessageEvent;
-import org.kitteh.irc.client.library.event.user.UserAccountStatusEvent;
-import org.kitteh.irc.client.library.event.user.UserNickChangeEvent;
+import org.kitteh.irc.client.library.event.user.*;
+import org.kitteh.irc.client.library.feature.network.ClientConnection;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -31,6 +32,7 @@ import java.util.SortedSet;
 public class IRCHandler {
     private final MainWindowController controller;
     private final ImmutableMap<String, Integer> ctcpQueries = ImmutableMap.of("VERSION", 1, "TIME ", 2, "FINGER ", 3);
+    Client client = Connect.client.getClient();
 
     public IRCHandler(MainWindowController controller) {
         this.controller = controller;
@@ -77,12 +79,30 @@ public class IRCHandler {
 	    controller.addMessageToList(message, event.getChannel());
     }
 
-@NonNull
-private Optional<SortedSet<ChannelUserMode>> getUserModes( ChannelMessageEvent event ){
-	return event.getChannel().getUserModes(event.getActor());
-}
-
-//
+    @NonNull
+    private Optional<SortedSet<ChannelUserMode>> getUserModes( ChannelMessageEvent event ){
+    	return event.getChannel().getUserModes(event.getActor());
+    }
+    
+    //
+    @Handler
+    public  void onUserQuitServer(UserQuitEvent event){
+    }
+    @Handler
+    public void onUserInviteToChannel(ChannelInviteEvent event){
+    }
+    @Handler
+    public void onUserDepartChannel(ChannelPartEvent event){
+    }
+    @Handler
+    public void onConnectionClosed( ClientConnectionClosedEvent event ){
+    }
+    @Handler
+    public void onConnectionEstablished( ClientConnectionEstablishedEvent event ){
+    }
+    @Handler
+    public void onNicknameRejected( NickRejectedEvent event){
+    }
     @Handler
     public void onAccountStatusEvent(UserAccountStatusEvent event){
     }
@@ -99,8 +119,27 @@ private Optional<SortedSet<ChannelUserMode>> getUserModes( ChannelMessageEvent e
     // Handles events after user joins to a channel
     @Handler
     public void onChannelJoin(RequestedChannelJoinCompleteEvent event){
-        controller.updateChannelListAndMessageSet(event.getChannel());
+	    if (event.getUser().getNick().equals(client.getNick())){
+		    controller.updateChannelListAndMessageSet(event.getChannel());
+	    }
     }
+    @Handler
+    public void onUserChannelJoin(ChannelJoinEvent event){
+    	if (!event.getUser().getNick().equals(client.getNick())){
+    	controller.updateUserJoin(event.getUser());
+	    }
+    }
+    @Handler
+    public void onUserKick( ChannelKickEvent event ){
+    if(controller.pointerCurrentChannel.equals(event.getChannel())){
+    	controller.updateUserKick(event.getUser());
+    }
+    }
+    @Handler
+    public void onKnock(ChannelKnockEvent event){
+    }
+   
+    
 
     @Handler
     public void onCTCPQuery(PrivateCtcpQueryEvent event){

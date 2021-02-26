@@ -5,6 +5,7 @@
 .menu .label
 {
     -fx-text-fill: white;
+    -fx-font: 14px "Roboto";
 }
 .menu-item .label{
     -fx-text-fill: black;

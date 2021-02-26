@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.geometry.Insets?>
@@ -21,147 +20,162 @@
 <?import javafx.scene.text.TextFlow?>
 
 <StackPane fx:id="stackRootPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.MainWindowController">
-   <children>
-      <BorderPane id="borderPaneMainWindow" fx:id="borderPane" maxHeight="1080.0" maxWidth="1920.0" minHeight="600.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPaneMainWindow">
-         <bottom>
-            <HBox alignment="TOP_CENTER" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
-               <children>
-                  <Label fx:id="labelLeftBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxHeight="71.0" maxWidth="1.7976931348623157E308" prefHeight="71.0" prefWidth="200.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" />
-                  <VBox HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <children>
-                        <TextField fx:id="typeField" alignment="BASELINE_LEFT" cache="true" cacheHint="SPEED" focusTraversable="false" maxWidth="1800.0" minWidth="800.0" onAction="#onEnterKeyPress" prefHeight="20.0" prefWidth="800.0" styleClass="jfxTextField" stylesheets="@../stylesheet/basic.css">
-                           <font>
-                              <Font name="Roboto" size="12.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
-                  </VBox>
-                  <Label fx:id="labelRightBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" maxHeight="71.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css">
-                     <font>
-                        <Font name="Roboto Black" size="12.0" />
-                     </font>
-                  </Label>
-               </children>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </HBox>
-         </bottom>
-         <left>
-            <VBox maxHeight="1000.0" prefHeight="524.0" prefWidth="200.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="40.0" BorderPane.alignment="CENTER">
-               <children>
-                  <ListView fx:id="channelsList" blendMode="MULTIPLY" cache="true" cacheHint="QUALITY" depthTest="ENABLE" focusTraversable="false" maxHeight="1000.0" prefHeight="645.0" prefWidth="200.0" stylesheets="@../stylesheet/channelListView.css" VBox.vgrow="ALWAYS" />
-                   <JFXButton fx:id="addNewChannelButton" buttonType="RAISED" layoutX="10.0" layoutY="10.0" onAction="#handleNewChannelButton" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE" />
-               </children>
-            </VBox>
-         </left>
-         <center>
-            <VBox prefHeight="736.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-               <children>
-                  <JFXListView fx:id="messageJFXListView" cache="true" cacheHint="SPEED" depth="1" focusTraversable="false" maxHeight="1000.0" prefHeight="690.0" prefWidth="800.0" styleClass="jfxListViewMainChat" stylesheets="@../stylesheet/chatListView.css" verticalGap="5.0" VBox.vgrow="ALWAYS">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </JFXListView>
-               </children>
-            </VBox>
-         </center>
-         <right>
-            <VBox maxHeight="1000.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="channelNameLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="200.0" stylesheets="@../stylesheet/basic.css" />
-                  <JFXListView fx:id="userList" blendMode="MULTIPLY" cache="true" cacheHint="QUALITY" depthTest="ENABLE" focusTraversable="false" maxHeight="1000.0" prefHeight="645.0" prefWidth="200.0" stylesheets="@../stylesheet/usersListView.css" VBox.vgrow="ALWAYS" />
-                  <JFXComboBox prefHeight="25.0" prefWidth="200.0" />
-               </children>
-            </VBox>
-         </right>
-         <top>
-            <VBox prefHeight="135.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <MenuBar fx:id="toolbar" prefHeight="33.0" prefWidth="1200.0" stylesheets="@../stylesheet/toolbar.css">
-                    <menus>
-                      <Menu mnemonicParsing="false" text="JFFX">
-                        <items>
-                              <MenuItem mnemonicParsing="false" text="debug" />
-                          <MenuItem id="exitMenuItem" mnemonicParsing="false" onAction="#onExitMenuItemClicked" text="Wyjdź" />
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Ustawienia">
-                        <items>
-                          <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" onAction="#onPreferencesMenuItemClicked" text="Preferencje" />
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Pomoc">
-                        <items>
-                          <MenuItem mnemonicParsing="false" text="O programie" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="1200.0" VBox.vgrow="NEVER">
-                     <children>
-                        <TextFlow prefWidth="200.0">
-                           <children>
-                              <Label fx:id="serverNameLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
-                                 <padding>
-                                    <Insets top="20.0" />
-                                 </padding>
-                              </Label>
-                           </children>
-                        </TextFlow>
-                        <StackPane alignment="BASELINE_CENTER" maxHeight="-Infinity" minHeight="35.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
-                           <children>
-                              <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="47.0" prefHeight="60.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabClosingPolicy="ALL_TABS" tabMaxHeight="35.0" tabMinHeight="35.0" StackPane.alignment="BASELINE_CENTER">
-                                 <effect>
-                                    <DropShadow />
-                                 </effect>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <StackPane.margin>
-                                    <Insets />
-                                 </StackPane.margin>
-                              </JFXTabPane>
-                           </children>
-                        </StackPane>
-                        <Label fx:id="usersTableLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
-                           <font>
-                              <Font name="Roboto Black" size="12.0" />
-                           </font>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <padding>
-                              <Insets top="20.0" />
-                           </padding>
+    <children>
+        <BorderPane id="borderPaneMainWindow" fx:id="borderPane" maxHeight="1080.0" maxWidth="1920.0" minHeight="600.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" styleClass="borderPaneMainWindow">
+            <bottom>
+                <HBox alignment="TOP_CENTER" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
+                    <children>
+                        <Label fx:id="labelLeftBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxHeight="71.0" maxWidth="1.7976931348623157E308" prefHeight="71.0" prefWidth="200.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" />
+                        <VBox HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <children>
+                                <TextField fx:id="typeField" alignment="BASELINE_LEFT" cache="true" cacheHint="SPEED" focusTraversable="false" maxWidth="1800.0" minWidth="800.0" onAction="#onEnterKeyPress" prefHeight="20.0" prefWidth="800.0" styleClass="jfxTextField" stylesheets="@../stylesheet/basic.css">
+                                    <font>
+                                        <Font name="Roboto" size="12.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" top="10.0" />
+                                    </VBox.margin>
+                                </TextField>
+                            </children>
+                        </VBox>
+                        <Label fx:id="labelRightBottom" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" maxHeight="71.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css">
+                            <font>
+                                <Font name="Roboto Black" size="12.0" />
+                            </font>
                         </Label>
-                     </children>
-                  </HBox>
-                  <HBox alignment="BASELINE_CENTER" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
-                     <children>
-                        <TextFlow textAlignment="CENTER">
-                           <children>
-                              <Label id="motdLabelCSS" fx:id="motdLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="42.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" wrapText="true">
-                                 <font>
-                                    <Font name="Roboto Black" size="12.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets bottom="5.0" />
-                                 </padding>
-                              </Label>
-                           </children>
-                        </TextFlow>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </top>
-      </BorderPane>
-   </children>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets />
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
+            <left>
+                <VBox maxHeight="1000.0" prefHeight="524.0" prefWidth="200.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="40.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <ListView fx:id="channelsList" blendMode="MULTIPLY" cache="true" cacheHint="QUALITY" depthTest="ENABLE" focusTraversable="false" maxHeight="1000.0" prefHeight="645.0" prefWidth="200.0" stylesheets="@../stylesheet/channelListView.css" VBox.vgrow="ALWAYS" />
+                        <JFXButton fx:id="addNewChannelButton" buttonType="RAISED" layoutX="10.0" layoutY="10.0" onAction="#handleNewChannelButton" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE" />
+                    </children>
+                </VBox>
+            </left>
+            <center>
+                <VBox prefHeight="736.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <JFXListView fx:id="messageJFXListView" cache="true" cacheHint="SPEED" depth="1" focusTraversable="false" maxHeight="1000.0" prefHeight="690.0" prefWidth="800.0" styleClass="jfxListViewMainChat" stylesheets="@../stylesheet/chatListView.css" verticalGap="5.0" VBox.vgrow="ALWAYS">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </JFXListView>
+                    </children>
+                </VBox>
+            </center>
+            <right>
+                <VBox maxHeight="1000.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="channelNameLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="200.0" stylesheets="@../stylesheet/basic.css" />
+                        <JFXListView fx:id="userList" blendMode="MULTIPLY" cache="true" cacheHint="QUALITY" depthTest="ENABLE" focusTraversable="false" maxHeight="1000.0" prefHeight="645.0" prefWidth="200.0" stylesheets="@../stylesheet/usersListView.css" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </right>
+            <top>
+                <VBox alignment="CENTER" prefHeight="128.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar fx:id="toolbar" minHeight="30.0" prefHeight="40.0" prefWidth="1200.0" stylesheets="@../stylesheet/toolbar.css">
+                            <menus>
+                                <Menu mnemonicParsing="false" text="JFFX">
+                                    <items>
+                                        <MenuItem id="exitMenuItem" mnemonicParsing="false" onAction="#onExitMenuItemClicked" text="Wyjdź" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Ustawienia">
+                                    <items>
+                                        <MenuItem fx:id="preferenceMenuItem" mnemonicParsing="false" onAction="#onPreferencesMenuItemClicked" text="Preferencje" />
+                                    </items>
+                                </Menu>
+                        <Menu mnemonicParsing="false" text="Serwer">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Zarejestruj" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Kanał">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Zmień Temat" />
+                              <MenuItem mnemonicParsing="false" text="Tryb Chronionego Tematu" />
+                              <MenuItem mnemonicParsing="false" text="Ustaw Hasło" />
+                              <MenuItem mnemonicParsing="false" text="Żadnych Wiadomości z Zewnątrz" />
+                              <MenuItem mnemonicParsing="false" text="Lista Zbanowanych Użytkowników" />
+                          </items>
+                        </Menu>
+                                <Menu mnemonicParsing="false" text="Pomoc">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="O programie" />
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <HBox alignment="CENTER" fillHeight="false" prefHeight="70.0" prefWidth="1200.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <TextFlow prefWidth="200.0">
+                                    <children>
+                                        <Label fx:id="serverNameLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
+                                            <padding>
+                                                <Insets top="20.0" />
+                                            </padding>
+                                        </Label>
+                                    </children>
+                                </TextFlow>
+                                <StackPane alignment="BASELINE_CENTER" maxHeight="-Infinity" minHeight="35.0" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <JFXTabPane fx:id="upperTabPane" maxHeight="-Infinity" minHeight="47.0" prefHeight="60.0" prefWidth="800.0" stylesheets="@../stylesheet/tabPane.css" tabClosingPolicy="ALL_TABS" tabMaxHeight="35.0" tabMinHeight="35.0" StackPane.alignment="BASELINE_CENTER">
+                                            <effect>
+                                                <DropShadow />
+                                            </effect>
+                                            <opaqueInsets>
+                                                <Insets />
+                                            </opaqueInsets>
+                                            <StackPane.margin>
+                                                <Insets />
+                                            </StackPane.margin>
+                                        </JFXTabPane>
+                                    </children>
+                           <padding>
+                              <Insets top="15.0" />
+                           </padding>
+                                </StackPane>
+                                <Label fx:id="usersTableLabel" alignment="BASELINE_CENTER" minHeight="35.0" prefHeight="70.0" prefWidth="200.0" stylesheets="@../stylesheet/basic.css">
+                                    <font>
+                                        <Font name="Roboto Black" size="12.0" />
+                                    </font>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <padding>
+                                        <Insets top="20.0" />
+                                    </padding>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <HBox alignment="BASELINE_CENTER" fillHeight="false" prefHeight="40.0" prefWidth="1200.0" style="-fx-background-color: #1b75bc;">
+                            <children>
+                                <TextFlow textAlignment="CENTER">
+                                    <children>
+                                        <Label id="motdLabelCSS" fx:id="motdLabel" alignment="BASELINE_CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="15.0" prefHeight="42.0" prefWidth="800.0" style="-fx-background-color: #1b75bc;" stylesheets="@../stylesheet/basic.css" wrapText="true">
+                                            <font>
+                                                <Font name="Roboto Black" size="12.0" />
+                                            </font>
+                                            <padding>
+                                                <Insets bottom="5.0" />
+                                            </padding>
+                                        </Label>
+                                    </children>
+                                </TextFlow>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </top>
+        </BorderPane>
+    </children>
 </StackPane>

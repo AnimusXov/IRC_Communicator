@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXPasswordField?>
-<?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
@@ -44,14 +43,10 @@
                <content>
                   <VBox alignment="BASELINE_CENTER" fillWidth="false" spacing="10.0">
                      <children>
-                        <JFXRadioButton prefHeight="17.0" prefWidth="135.0">
-                           <font>
-                              <Font name="Roboto" size="12.0" />
-                           </font></JFXRadioButton>
-                        <JFXTextField fx:id="newServerNickname" promptText="Nazwa" text="Nickname" />
+                        <JFXTextField fx:id="newServerNickname" promptText="Nickname" />
                         <JFXTextField fx:id="newServerAlternativeNickname" promptText="Alternatywny nickname" />
                         <JFXTextField fx:id="newServerRealName" promptText="Prawdziwe Imie" />
-                        <JFXTextField fx:id="newServerUsername" promptText="Adres IP" text="Nazwa Użytkownika" />
+                        <JFXTextField fx:id="newServerUsername" promptText="Nazwa Użytkownika" />
                         <JFXPasswordField fx:id="newServerPassword" promptText="Hasło" />
                         <JFXButton fx:id="newUserAddButton" buttonType="RAISED" onAction="#handleNewUserSaveButtonAction" prefHeight="25.0" prefWidth="135.0" style="-fx-background-color: #29b6f6;" text="Dodaj" textFill="WHITE">
                            <font>

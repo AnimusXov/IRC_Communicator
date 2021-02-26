@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane prefHeight="544.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.SettingsController">
+<BorderPane prefHeight="490.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.irccom.controller.SettingsController">
    <center>
       <JFXMasonryPane fx:id="masonryPane" VSpacing="10.0" cellHeight="30.0" cellWidth="100.0" limitColumn="6" limitRow="6">
          <children>
@@ -18,17 +18,17 @@
             <JFXColorPicker fx:id="operatorColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
             <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Pół-Operator" />
             <JFXColorPicker fx:id="halfOpColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
-            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Admin" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Admin Sieci" />
             <JFXColorPicker fx:id="ircAdminColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
             <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Mój kolor" />
             <JFXColorPicker fx:id="myColour" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
-            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="cos tam" />
+            <Label minHeight="30.0" prefHeight="30.0" prefWidth="150.0" text="Klienci z trybem głosowym" />
             <JFXColorPicker fx:id="otherUsers" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" />
          </children>
       </JFXMasonryPane>
    </center>
    <bottom>
-      <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="548.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <JFXButton fx:id="saveButton" buttonType="RAISED" onAction="#handleSaveSettingsButtonAction" prefWidth="150.0" style="-fx-background-color: #29b6f6;" text="Zapisz" textFill="WHITE" />
             <JFXButton fx:id="resetButton" buttonType="RAISED" onAction="#handleResetSettingsButtonAction" prefWidth="150.0" style="-fx-background-color: #29b6f6;" text="Resetuj" textFill="WHITE" />
