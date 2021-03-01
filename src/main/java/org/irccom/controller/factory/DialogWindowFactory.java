@@ -8,7 +8,7 @@ public class DialogWindowFactory {
 
     public static boolean showConfirmDialog(String title, String content) {
         ButtonType yes = new ButtonType("Potwierdź", ButtonBar.ButtonData.OK_DONE);
-        ButtonType no = new ButtonType("Analuj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType no = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 content,
                 yes,
@@ -19,4 +19,5 @@ public class DialogWindowFactory {
 
         return result.orElse(no) == yes;
     }
+
 }

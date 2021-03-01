@@ -25,14 +25,17 @@ import org.kitteh.irc.client.library.feature.network.ClientConnection;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.SortedSet;
 
 public class IRCHandler {
     private final MainWindowController controller;
-    private final ImmutableMap<String, Integer> ctcpQueries = ImmutableMap.of("VERSION", 1, "TIME ", 2, "FINGER ", 3);
+    private final ImmutableMap<String, Integer> ctcpQueries = ImmutableMap.of("VERSION", 1, "TIME ", 2, "FINGER ", 3,"PING",4,"PONG",5);
     Client client = Connect.client.getClient();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public IRCHandler(MainWindowController controller) {
         this.controller = controller;
@@ -41,8 +44,13 @@ public class IRCHandler {
     // Handles private messages
     @Handler
     public void onPrivateMessage( PrivateMessageEvent event) {
-        if(!(event.getActor().getNick().isEmpty() && event.getMessage().isEmpty()))
-        controller.createNewTab(new Message(event.getActor().getNick(),event.getMessage()));
+        if(!(event.getActor().getNick().isEmpty() && event.getMessage().isEmpty())) {
+	        Message message = new Message();
+	        message.setNickname(event.getActor().getNick());
+	        message.setMessage(event.getMessage());
+	        message.setTime(LocalDateTime.now().format(formatter));
+	        controller.createNewTab(message);
+        }
     }
     // Handles events related to joining a server
     @Handler
@@ -52,7 +60,11 @@ public class IRCHandler {
     // Handles messages from server
     @Handler
     public void onServerMessage(ServerMessageEvent event ) {
-            controller.newServerMessage(new Message(event.getSource().getMessage()));
+            Message message = new Message();
+            message.setMessage(event.getSource().getMessage());
+            message.setTime(LocalDateTime.now().format(formatter));
+	        controller.newServerMessage(message);
+         
 
     }
     // Handles messages from a channel
@@ -76,6 +88,7 @@ public class IRCHandler {
 	    message.setNickname(event.getActor().getNick());
 	    message.setMessage(event.getMessage());
 	    message.setPrefixUser(temp);
+	    message.setTime(LocalDateTime.now().format(formatter));
 	    controller.addMessageToList(message, event.getChannel());
     }
 
@@ -119,13 +132,11 @@ public class IRCHandler {
     // Handles events after user joins to a channel
     @Handler
     public void onChannelJoin(RequestedChannelJoinCompleteEvent event){
-	    if (event.getUser().getNick().equals(client.getNick())){
 		    controller.updateChannelListAndMessageSet(event.getChannel());
-	    }
     }
     @Handler
     public void onUserChannelJoin(ChannelJoinEvent event){
-    	if (!event.getUser().getNick().equals(client.getNick())){
+    	if (!event.getUser().getNick().equals(client.getNick()) && controller.pointerCurrentChannel.equals(event.getChannel())){
     	controller.updateUserJoin(event.getUser());
 	    }
     }
@@ -138,23 +149,31 @@ public class IRCHandler {
     @Handler
     public void onKnock(ChannelKnockEvent event){
     }
+  
    
     
 
     @Handler
     public void onCTCPQuery(PrivateCtcpQueryEvent event){
-           switch (ctcpQueries.get(event.getCommand())){
-               case 1:
-                   event.setReply("KhIRC");
-                   break;
-               case 2:
-                   event.setReply(LocalTime.now().toString());
-                   break;
-               case 3:
-                   event.setReply("");
-                   break;
-           }
-
+    	if(event.getReply().isPresent()) {
+		    switch ( ctcpQueries.get(event.getCommand()) ) {
+			    case 1:
+				    event.setReply("KhIRC");
+				    break;
+			    case 2:
+				    event.setReply(LocalTime.now().toString());
+				    break;
+			    case 3:
+				    event.setReply("");
+				    break;
+			    case 4:
+				    event.setReply("PONG :ping");
+				    break;
+			    case 5:
+				    event.setReply("PING :pong");
+				    break;
+		    }
+	    }
         }
 
 }

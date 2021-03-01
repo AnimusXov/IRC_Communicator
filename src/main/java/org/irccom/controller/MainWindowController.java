@@ -1,7 +1,6 @@
 package org.irccom.controller;
 
 import com.jfoenix.controls.*;
-import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,13 +11,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ChoiceBoxTreeTableCell;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -29,7 +25,7 @@ import javafx.util.Duration;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import lombok.SneakyThrows;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.irccom.controller.factory.JFXDialogFactory;
 import org.irccom.controller.factory.MessageCompomentFactory;
 import org.irccom.controller.factory.SceneFactory;
 import org.irccom.controller.model.PrefixUser;
@@ -40,26 +36,24 @@ import org.irccom.irc.listener.IRCHandler;
 import org.irccom.irc.model.CurrentChannel;
 import org.irccom.irc.model.Message;
 import org.kitteh.irc.client.library.Client;
-import org.kitteh.irc.client.library.command.UserModeCommand;
 import org.kitteh.irc.client.library.defaults.element.mode.DefaultChannelMode;
-import org.kitteh.irc.client.library.defaults.element.mode.DefaultUserMode;
 import org.kitteh.irc.client.library.element.Channel;
 import org.kitteh.irc.client.library.element.User;
 import org.kitteh.irc.client.library.element.mode.ChannelMode;
-import org.kitteh.irc.client.library.element.mode.ChannelUserMode;
 import org.kitteh.irc.client.library.element.mode.ModeStatus;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainWindowController   {
 
-    public Label labelRightBottom;
+private final org.irccom.controller.factory.JFXDialogFactory JFXDialogFactory = new JFXDialogFactory(this);
+public Label labelRightBottom;
     public Label labelLeftBottom;
     public Label serverNameLabel;
     public Label usersTableLabel;
@@ -74,26 +68,33 @@ public class MainWindowController   {
     public ChoiceBoxTreeTableCell<String,Integer> commandComboBox;
     public MenuButton commandMenu;
     public Label channelNameLabel;
+    
     public MenuItem privateMessage = new MenuItem();
     public MenuItem whoIs = new MenuItem();
     public MenuItem kick = new MenuItem();
     public MenuItem ban = new MenuItem();
     public MenuItem op = new MenuItem();
-    public ContextMenu menu = new ContextMenu();
+    public ContextMenu userListContextMenu = new ContextMenu();
     
+    
+    public MenuItem copy = new MenuItem();
+    public ContextMenu messageListContextMenu = new ContextMenu();
   
-   public MenuItem preferenceMenuItem;
-
-
+    public MenuItem preferenceMenuItem;
     Client client = Connect.client.getClient();
     Hashtable<Channel, CurrentChannel> setOfMessageObsList = new Hashtable<>();
     Hashtable<String, ObservableList<Message>> setOfPrivateMessageObsLists = new Hashtable<>();
     Hashtable<String, Tab> hashTableOfTabs = new Hashtable<>();
     public Channel pointerCurrentChannel;
     Config config = new Config();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     IRCHandler IRCHandler = new IRCHandler(this);
 
 
+
+   
+
+ 
     @FXML
     ObservableList<Message> serverMessages = FXCollections.observableArrayList();
     @FXML
@@ -184,9 +185,10 @@ public class MainWindowController   {
 	                
 	                Text nickname = new Text();
 	                Text message = new Text();
-	                TextFlow messageCell = new TextFlow(nickname,message);
-	               
-	               
+	                Text time = new Text();
+	                TextFlow messageCell = new TextFlow(time,nickname,message);
+	              
+	                
 	                
                     @SneakyThrows
                     @Override
@@ -195,22 +197,24 @@ public class MainWindowController   {
                         if (empty || item == null || item.getMessage() == null) {
                             setText(null);
                         } else if(item.getNickname() == null) {
-                            setText(item.getMessage()); // Server messages
+	                       
+                            setText(item.getTime() + " " + item.getMessage()); // Server messages
                         }
                         else{
 	                        VBox vBox = new VBox();
 	                        setText(null);
 	                        setMessageFormatting(item);
 	                        if(item.isHasImage()){
-		                        message.setText(item.getMessage());
-	                        	System.out.println("zdjecie1");
+		                        message.setText( item.getMessage());
+		                        time.setText(item.getTime() + " ");
 	                        	if(!vBox.getChildren().contains(item.getImage()) && item.getImage()!=null) {
 			                        vBox.getChildren().addAll(messageCell,item.getImage());
 		                        }
 	                        	setGraphic(vBox);
 	                        }
 	                        else {
-		                        message.setText(item.getMessage());
+		                        time.setText(item.getTime() + " ");
+		                        message.setText( item.getMessage());
 		                        setGraphic(messageCell);
 	                        }
                         }
@@ -269,7 +273,7 @@ public class MainWindowController   {
 				
 			    };
 			    cell.setOnContextMenuRequested(e -> {
-						    menu.show(cell, e.getScreenX(), e.getScreenY());
+						    userListContextMenu.show(cell, e.getScreenX(), e.getScreenY());
 				    privateMessage.setOnAction(event -> {
 					   newPrivateConversationTab(cell.getItem().getUser());
 				    });
@@ -295,50 +299,6 @@ public class MainWindowController   {
 
     }
 
-    /*chat_window.setCellFactory(param -> new ListCell<Message>() {
-
-                @Override
-                protected void updateItem(Message item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (empty || item == null || item.getMessage() == null) {
-                        setText(null);
-                    } else if(item.getNickname() == null) {
-                        setText(item.getMessage());
-                    }
-                    else{
-                        setText("<" + item.getNickname() + "> " + item.getMessage());
-                    }
-
-                }
-            });*/
-       /* ListCell<Message> cell = new ListCell<>();
-
-        chat_window.setCellFactory(lv -> {
-
-            final ClipboardContent clipboardContent = new ClipboardContent();
-            ContextMenu contextMenu = new ContextMenu();
-
-        MenuItem copyToClipboard = new MenuItem();
-            copyToClipboard.textProperty().bind(Bindings.format("Kopiuj \"%s\"", cell.itemProperty()));
-            copyToClipboard.setOnAction(event -> {
-                String item = cell.getItem().getMessage();
-                clipboardContent.putString(item);
-                Clipboard.getSystemClipboard().setContent(clipboardContent);
-        });
-
-        contextMenu.getItems().add(copyToClipboard);
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if (isNowEmpty) {
-                    cell.setContextMenu(null);
-                } else {
-                    cell.setContextMenu(contextMenu);
-                }
-            });
-            return cell;
-        });
-            } */
-    // Switching channels via double click, load proper user and message lists
 
 
 
@@ -412,39 +372,10 @@ public class MainWindowController   {
     private void handleNewChannelButton(ActionEvent event){
         JFXButton button = new JFXButton("Dodaj");
         button.setStyle("-fx-background-color: #29b6f6");
-        createJFXDialog(stackRootPane,borderPane, Collections.singletonList(button),"Dodaj nowy kanał",
-		        "Wprowadź nazwę #kanału");
+	    JFXDialogFactory.createJFXDialog(stackRootPane, borderPane, Collections.singletonList(button), "Dodaj nowy kanał"
+			    , "Wprowadź nazwę #kanału", 1);
     }
-    public void createJFXDialog(StackPane root, Node blurredNode, List<JFXButton> controls, String header, String body) {
-        TextField channel_name = new TextField();
-        BoxBlur blur = new BoxBlur(3, 3, 3);
-        if (controls.isEmpty()) {
-            controls.add(new JFXButton("Dodaj"));
-        }
-        JFXDialogLayout dialogLayout = new JFXDialogLayout();
-        JFXDialog dialog = new JFXDialog(root, dialogLayout, JFXDialog.DialogTransition.TOP);
 
-        controls.forEach(controlButton -> {
-            controlButton.getStyleClass().add("confirm-button");
-            controlButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> dialog.close());
-        });
-        dialogLayout.setHeading(new Label(header));
-        dialogLayout.setBody(new Label(body));
-        dialogLayout.setBody(channel_name);
-        dialogLayout.setActions(controls);
-        dialog.show();
-        dialog.setOnDialogClosed((JFXDialogEvent event1) -> {
-            blurredNode.setEffect(null);
-
-            Platform.runLater(() -> {
-                if(!channel_name.getText().isEmpty()) {
-                    client.addChannel(channel_name.getText());
-                }
-            });
-        });
-        blurredNode.setEffect(blur);
-
-    }
 
     @FXML
     private void onEnterKeyPress(){
@@ -454,6 +385,7 @@ public class MainWindowController   {
 		            String message = typeField.getText();
 		            Message fullMessage = new Message();
 		            client.sendMessage(pointerCurrentChannel, message);
+		            fullMessage.setTime(LocalDateTime.now().format(formatter));
 		            fullMessage.setMessage(message);
 		            fullMessage.setNickname(client.getNick());
 		            fullMessage.setPrefixUser(new PrefixUser(client.getUser().get(), getUserNickPrefix(client.getUser().get())));
@@ -473,6 +405,7 @@ public class MainWindowController   {
 		            String message = typeField.getText();
 		            Message fullMessage = new Message();
 		            client.sendMessage(upperTabPane.getSelectionModel().getSelectedItem().getText(),message);
+		            fullMessage.setTime(LocalDateTime.now().format(formatter));
 		            fullMessage.setMessage(message);
 		            fullMessage.setNickname(client.getNick());
 		            fullMessage.setPrefixUser(new PrefixUser(client.getUser().get(), getUserNickPrefix(client.getUser().get())));
@@ -530,22 +463,25 @@ public class MainWindowController   {
     
     public void updateUserKick(org.kitteh.irc.client.library.element.User user){
 	    Platform.runLater(() -> {
-		    userObsList.stream().filter(o -> o.getUser().equals(user)).forEach(o -> {
-			    userObsList.remove(o);
+			    userObsList.removeIf(o -> o.getUser().equals(user));
+			    userList.getItems().clear();
 			    userList.setItems(FXCollections.observableArrayList(userObsList));
-			    userList.refresh();
+			    sortUserList();
+		        userList.refresh();
 			    usersTableLabel.setText(userObsList.size() + " Użytkowników");
-		    });
 	    });
-	   
+	 
     }
     public void updateUserJoin(org.kitteh.irc.client.library.element.User user){
 	    Platform.runLater(() -> {
 		userObsList.add(new PrefixUser(user,getUserNickPrefix(user)));
+		    userList.getItems().clear();
 		    userList.setItems(FXCollections.observableArrayList(userObsList));
+		    sortUserList();
 		    userList.refresh();
 		    usersTableLabel.setText(userObsList.size() + " Użytkowników");
 	    });
+	    
 	   
     }
     // Update ChannelTopic label upon change
@@ -629,17 +565,21 @@ public class MainWindowController   {
         beginClock();
         setupDefaultTabs();
         setupUserListContextMenu();
+	    setupMessageListContextMenu();
         typeField.requestFocus();
 	    setupJMetroStyle();
     }
 
 private void setupUserListContextMenu(){
-    privateMessage.setText("Prywatna wiadomość");
-    whoIs.setText("Informacje o użytkowniku");
-    kick.setText("Wyrzuć");
-    ban.setText("Zbanuj");
-    op.setText("Nadaj uprawnienia operatora");
-	menu.getItems().addAll(privateMessage,whoIs,kick,ban,op);
+        privateMessage.setText("Prywatna wiadomość");
+        whoIs.setText("Informacje o użytkowniku");
+        kick.setText("Wyrzuć");
+        ban.setText("Zbanuj");
+        op.setText("Nadaj uprawnienia operatora");
+		userListContextMenu.getItems().addAll(privateMessage,whoIs,kick,ban,op);
+}
+private void setupMessageListContextMenu(){
+    	copy.setText("Kopiuj");
 }
 
 private void initializeContextMenu(){
@@ -653,10 +593,37 @@ private void onPreferencesMenuItemClicked(ActionEvent event) throws IOException{
 }
 // Exit the application
 @FXML
-private void onExitMenuItemClicked(ActionEvent event) throws IOException{
+private void onExitMenuItemClicked(ActionEvent event){
     client.shutdown();
 	Platform.exit();
 	System.exit(0);
+	
+}
+// Change the topic
+@FXML
+private void onTopicMenuItemClicked( ActionEvent event)  {
+    	if(pointerCurrentChannel!=null) {
+		    JFXButton button = new JFXButton("Zmień");
+		    button.setStyle("-fx-background-color: #29b6f6");
+		    JFXDialogFactory.createJFXDialog(stackRootPane, borderPane, Collections.singletonList(button), "Ustawienia tematu", "Wprowadź temat", 2);
+	    }
+}
+@FXML
+private void onBannedMenuItemClicked( ActionEvent event)  {
+	if(pointerCurrentChannel!=null) {
+		JFXButton button = new JFXButton("Zmień");
+		button.setStyle("-fx-background-color: #29b6f6");
+		JFXDialogFactory.createJFXDialog(stackRootPane, borderPane, Collections.singletonList(button), "Ustawienia tematu", "Wprowadź temat", 2);
+	}
+}
+
+@FXML
+private void onRegisterMenuItemClicked(ActionEvent event) {
+	JFXButton button = new JFXButton("Zarejestruj");
+	JFXButton button2 = new JFXButton("Potwierdź");
+	button.setStyle("-fx-background-color: #29b6f6; -fx-text-fill: white;");
+	button2.setStyle("-fx-background-color: #29b6f6; -fx-text-fill: white;");
+	JFXDialogFactory.createJFXRegisterDialog(stackRootPane, borderPane, Collections.singletonList(button), Collections.singletonList(button2), "Rejestracja konta", "Wypełnij wszystkie pola", 2);
 	
 }
 
@@ -688,5 +655,8 @@ private void onExitMenuItemClicked(ActionEvent event) throws IOException{
         
     }
 
+public Client getClient(){
+	return client;
+}
 }
 

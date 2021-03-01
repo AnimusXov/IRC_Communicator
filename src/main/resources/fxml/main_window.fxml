@@ -96,12 +96,12 @@
                                 </Menu>
                         <Menu mnemonicParsing="false" text="Serwer">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Zarejestruj" />
+                            <MenuItem mnemonicParsing="false" onAction="#onRegisterMenuItemClicked" text="Zarejestruj" />
                           </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Kanał">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Zmień Temat" />
+                            <MenuItem id="topicMenuItem" mnemonicParsing="false" onAction="#onTopicMenuItemClicked" text="Zmień Temat" />
                               <MenuItem mnemonicParsing="false" text="Tryb Chronionego Tematu" />
                               <MenuItem mnemonicParsing="false" text="Ustaw Hasło" />
                               <MenuItem mnemonicParsing="false" text="Żadnych Wiadomości z Zewnątrz" />

@@ -109,7 +109,7 @@ public class MenuController {
                 user = USER_DAO.get(serverList.getSelectionModel().getSelectedItem().getId()).get();
             }
             conn.connect(server, user,isUserInfo());
-            openNewWindow("main_window.fxml", true, "FX_IRC");
+            openNewWindow("main_window.fxml", true, "JFFX");
         }
     }
 

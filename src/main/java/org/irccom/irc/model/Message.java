@@ -9,8 +9,9 @@ import org.irccom.controller.model.PrefixUser;
 @Getter
 @Setter
 public class Message {
+    private String time;
     private String nickname;
-    private  String message;
+    private String message;
     private PrefixUser prefixUser;
     private ImageView image;
     boolean hasImage;

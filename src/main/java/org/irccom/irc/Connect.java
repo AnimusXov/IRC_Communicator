@@ -18,6 +18,7 @@ public class Connect {
         builder.listeners().input(line -> System.out.println(sdf.format(new Date()) + ' ' + "[I] " + line));
         builder.listeners().output(line -> System.out.println(sdf.format(new Date()) + ' ' + "[O] " + line));
         builder.listeners().exception(Throwable::printStackTrace);
+        
 
         if(!server.getPort().equals("6697")){
             if(isUserInfo)
@@ -29,6 +30,7 @@ else {
             if (!isUserInfo) {
                 buildDefaultConnect(server, user);
             } else {
+            
                 client = Client.builder()
                         .nick(user.getNickname())
                         .name(user.getUsername())
